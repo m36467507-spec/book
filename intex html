@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dimo - مكتبتك الرقمية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+        }
+
+        /* الخلفية مع اسم dimo */
+        body {
+            background: linear-gradient(135deg, #0a0f1e 0%, #1a1f2e 100%);
+            min-height: 100vh;
+            position: relative;
+            color: #e0e0e0;
+        }
+
+        /* خلفية باسم dimo */
+        body::before {
+            content: 'dimo';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20vw;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.03);
+            z-index: -1;
+            white-space: nowrap;
+            pointer-events: none;
+            letter-spacing: 20px;
+            text-transform: uppercase;
+            animation: floatDimo 20s ease-in-out infinite;
+        }
+
+        @keyframes floatDimo {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.05; }
+        }
+
+        /* إضاءة ديناميكية منخفضة */
+        .light-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                        rgba(255, 255, 255, 0.08) 0%, 
+                        rgba(0, 0, 0, 0.9) 70%);
+            pointer-events: none;
+            z-index: 1;
+            transition: background 0.1s;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(10, 15, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: #6c5ce7;
+            font-size: 1rem;
+            display: block;
+            letter-spacing: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #6c5ce7;
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: #6c5ce7;
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #6c5ce7;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        /* Auth Modal */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-container {
+            background: rgba(20, 25, 40, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            background: transparent;
+            border: none;
+            color: #e0e0e0;
+            font-weight: 700;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            border-bottom-color: #6c5ce7;
+            color: #6c5ce7;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #a0a0a0;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            box-shadow: 0 0 20px rgba(108,92,231,0.3);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108,92,231,0.3);
+        }
+
+        .close-auth {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-auth:hover {
+            color: #ff4444;
+            transform: rotate(90deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, #a0a0a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            box-shadow: 0 0 30px rgba(108,92,231,0.3);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c5ce7;
+        }
+
+        /* Categories */
+        .categories {
+            padding: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            color: #e0e0e0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .category-btn:hover {
+            background: #6c5ce7;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108,92,231,0.3);
+        }
+
+        .category-btn.active {
+            background: #6c5ce7;
+        }
+
+        /* Books Grid */
+        .books-grid {
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .book-card {
+            background: rgba(30, 35, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(108,92,231,0.2);
+            border-color: #6c5ce7;
+        }
+
+        .book-cover {
+            height: 300px;
+            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-cover::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .book-cover i {
+            font-size: 5rem;
+            color: white;
+            z-index: 1;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+
+        .book-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ff4757;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .book-info {
+            padding: 1.5rem;
+        }
+
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-author {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-rating {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .book-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6c5ce7;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(108,92,231,0.4);
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(20, 25, 40, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255,255,255,0.1);
+            z-index: 200;
+            transition: right 0.3s;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .cart-header h3 {
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .close-cart {
+            font-size: 2rem;
+            color: #a0a0a0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-cart:hover {
+            color: #ff4444;
+        }
+
+        .cart-items {
+            margin-bottom: 2rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-img i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .cart-item-price {
+            color: #6c5ce7;
+            font-weight: 700;
+        }
+
+        .remove-item {
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .cart-total {
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .cart-total div {
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,184,148,0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 15, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p {
+            color: #a0a0a0;
+            line-height: 1.8;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section ul li a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #6c5ce7;
+            transform: translateX(-5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: #6c5ce7;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #a0a0a0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- إضاءة ديناميكية -->
+    <div class="light-overlay" id="lightOverlay"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                dimo
+                <span>BOOKS</span>
+            </div>
+            <div class="nav-links">
+                <a href="#">الرئيسية</a>
+                <a href="#">الكتب</a>
+                <a href="#">التصنيفات</a>
+                <a href="#">الأكثر مبيعاً</a>
+                <a href="#">عروض</a>
+                <a href="#">اتصل بنا</a>
+            </div>
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <i class="fas fa-user" style="color: white; cursor: pointer;" onclick="openAuth()"></i>
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart" style="color: white;"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="close-auth" onclick="closeAuth()">×</div>
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">تسجيل دخول</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">حساب جديد</button>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" placeholder="أدخل بريدك الإلكتروني">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" placeholder="أدخل كلمة المرور">
+                </div>
+                <button class="auth-btn">تسجيل الدخول</button>
+            </div>
+            
+            <!-- Register Form -->
+            <div class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" placeholder="أدخل اسمك الكامل">
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" placeholder="أدخل بريدك الإلكتروني">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" placeholder="أدخل كلمة المرور">
+                </div>
+                <div class="form-group">
+                    <label>تأكيد كلمة المرور</label>
+                    <input type="password" placeholder="أعد إدخال كلمة المرور">
+                </div>
+                <button class="auth-btn">إنشاء حساب</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>سلة المشتريات</h3>
+            <span class="close-cart" onclick="toggleCart()">×</span>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be added here dynamically -->
+        </div>
+        <div class="cart-total">
+            <div>
+                <span>المجموع:</span>
+                <span id="cartTotal">0 ج.م</span>
+            </div>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">إتمام الشراء</button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>اكتشف عالم الكتب</h1>
+        <p>أكبر مكتبة رقمية عربية - آلاف الكتب في انتظارك</p>
+        <div class="search-box">
+            <input type="text" placeholder="ابحث عن كتاب، مؤلف، أو تصنيف...">
+            <i class="fas fa-search"></i>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <div class="categories">
+        <button class="category-btn active">الكل</button>
+        <button class="category-btn">روايات</button>
+        <button class="category-btn">تنمية بشرية</button>
+        <button class="category-btn">علوم</button>
+        <button class="category-btn">تاريخ</button>
+        <button class="category-btn">دينية</button>
+        <button class="category-btn">أطفال</button>
+        <button class="category-btn">اقتصاد</button>
+    </div>
+
+    <!-- Books Grid -->
+    <div class="books-grid" id="booksGrid"></div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>عن dimo</h4>
+                <p>أكبر مكتبة رقمية عربية، نوفر آلاف الكتب في مختلف المجالات بأسعار مميزة وتوصيل سريع.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><a href="#">الرئيسية</a></li>
+                    <li><a href="#">عن المكتبة</a></li>
+                    <li><a href="#">الكتب</a></li>
+                    <li><a href="#">التصنيفات</a></li>
+                    <li><a href="#">الأكثر مبيعاً</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>خدمات العملاء</h4>
+                <ul>
+                    <li><a href="#">اتصل بنا</a></li>
+                    <li><a href="#">الشحن والتوصيل</a></li>
+                    <li><a href="#">سياسة الإرجاع</a></li>
+                    <li><a href="#">الشروط والأحكام</a></li>
+                    <li><a href="#">الخصوصية</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>تواصل معنا</h4>
+                <ul>
+                    <li><i class="fas fa-phone"></i> 0123456789</li>
+                    <li><i class="fas fa-envelope"></i> info@dimo.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> القاهرة، مصر</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 dimo - جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <script>
+        // ==================== إضاءة ديناميكية ====================
+        const overlay = document.getElementById('lightOverlay');
+        
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            overlay.style.setProperty('--mouse-x', x + '%');
+            overlay.style.setProperty('--mouse-y', y + '%');
+        });
+
+        // ==================== قاعدة بيانات الكتب ====================
+        const books = [
+            {
+                id: 1,
+                title: "الأب الغني والأب الفقير",
+                author: "روبرت كيوساكي",
+                price: 120,
+                rating: 4.8,
+                category: "اقتصاد",
+                sales: 1500,
+                icon: "fa-chart-line"
+            },
+            {
+                id: 2,
+                title: "العادات السبع للناس الأكثر فعالية",
+                author: "ستيفن كوفي",
+                price: 150,
+                rating: 4.9,
+                category: "تنمية بشرية",
+                sales: 2000,
+                icon: "fa-clock"
+            },
+            {
+                id: 3,
+                title: "فن اللامبالاة",
+                author: "مارك مانسون",
+                price: 90,
+                rating: 4.7,
+                category: "تنمية بشرية",
+                sales: 1800,
+                icon: "fa-heart"
+            },
+            {
+                id: 4,
+                title: "مائة عام من العزلة",
+                author: "جابرييل ماركيز",
+                price: 110,
+                rating: 4.9,
+                category: "روايات",
+                sales: 2200,
+                icon: "fa-book"
+            },
+            {
+                id: 5,
+                title: "1984",
+                author: "جورج أورويل",
+                price: 95,
+                rating: 4.8,
+                category: "روايات",
+                sales: 1900,
+                icon: "fa-eye"
+            },
+            {
+                id: 6,
+                title: "تاريخ موجز للزمن",
+                author: "ستيفن هوكينج",
+                price: 130,
+                rating: 4.7,
+                category: "علوم",
+                sales: 1200,
+                icon: "fa-rocket"
+            },
+            {
+                id: 7,
+                title: "الرجال من المريخ والنساء من الزهرة",
+                author: "جون جراي",
+                price: 100,
+                rating: 4.6,
+                category: "تنمية بشرية",
+                sales: 1600,
+                icon: "fa-venus-mars"
+            },
+            {
+                id: 8,
+                title: "قوة التفكير الإيجابي",
+                author: "نورمان فينسنت",
+                price: 85,
+                rating: 4.5,
+                category: "تنمية بشرية",
+                sales: 1400,
+                icon: "fa-sun"
+            },
+            {
+                id: 9,
+                title: "الأيام",
+                author: "طه حسين",
+                price: 75,
+                rating: 4.8,
+                category: "روايات",
+                sales: 1700,
+                icon: "fa-feather"
+            },
+            {
+                id: 10,
+                title: "البخلاء",
+                author: "الجاحظ",
+                price: 80,
+                rating: 4.6,
+                category: "روايات",
+                sales: 1100,
+                icon: "fa-mask"
+            },
+            {
+                id: 11,
+                title: "مقدمة ابن خلدون",
+                author: "ابن خلدون",
+                price: 140,
+                rating: 4.9,
+                category: "تاريخ",
+                sales: 1300,
+                icon: "fa-scroll"
+            },
+            {
+                id: 12,
+                title: "القرآن الكريم",
+                author: "مصحف المدينة",
+                price: 200,
+                rating: 5.0,
+                category: "دينية",
+                sales: 5000,
+                icon: "fa-star-and-crescent"
+            },
+            {
+                id: 13,
+                title: "صحيح البخاري",
+                author: "الإمام البخاري",
+                price: 180,
+                rating: 5.0,
+                category: "دينية",
+                sales: 3000,
+                icon: "fa-mosque"
+            },
+            {
+                id: 14,
+                title: "قصة الوقت",
+                author: "كارل ساجان",
+                price: 115,
+                rating: 4.7,
+                category: "علوم",
+                sales: 900,
+                icon: "fa-hourglass"
+            },
+            {
+                id: 15,
+                title: "الأمير الصغير",
+                author: "أنطوان دو سانت إكزوبيري",
+                price: 60,
+                rating: 4.8,
+                category: "أطفال",
+                sales: 2500,
+                icon: "fa-crown"
+            },
+            {
+                id: 16,
+                title: "مزرعة الحيوان",
+                author: "جورج أورويل",
+                price: 70,
+                rating: 4.7,
+                category: "روايات",
+                sales: 1600,
+                icon: "fa-hippo"
+            }
+        ];
+
+        // ==================== سلة المشتريات ====================
+        let cart = [];
+        let cartCount = 0;
+        let cartTotal = 0;
+
+        // عرض الكتب
+        function displayBooks() {
+            const grid = document.getElementById('booksGrid');
+            grid.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <div class="book-cover">
+                        <i class="fas ${book.icon}"></i>
+                        <span class="book-badge">${book.sales}+ مبيع</span>
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-author">${book.author}</p>
+                        <div class="book-rating">
+                            ${generateStars(book.rating)} (${book.rating})
+                        </div>
+                        <div class="book-price">${book.price} ج.م</div>
+                        <button class="add-to-cart" onclick="addToCart(${book.id})">
+                            <i class="fas fa-cart-plus"></i> أضف إلى السلة
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // توليد النجوم
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= Math.floor(rating)) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i - rating < 1 && i - rating > 0) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
+            }
+            return stars;
+        }
+
+        // إضافة إلى السلة
+        function addToCart(bookId) {
+            const book = books.find(b => b.id === bookId);
+            const existingItem = cart.find(item => item.id === bookId);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    ...book,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            
+            // تأثير بسيط
+            alert(`تمت إضافة "${book.title}" إلى السلة`);
+        }
+
+        // تحديث السلة
+        function updateCart() {
+            cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+            cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            
+            document.getElementById('cartCount').textContent = cartCount;
+            
+            const cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-img">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                    <div class="cart-item-details">
+                        <div class="cart-item-title">${item.title}</div>
+                        <div class="cart-item-price">${item.price} ج.م × ${item.quantity}</div>
+                    </div>
+                    <div class="remove-item" onclick="removeFromCart(${item.id})">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('cartTotal').textContent = cartTotal + ' ج.م';
+        }
+
+        // إزالة من السلة
+        function removeFromCart(bookId) {
+            cart = cart.filter(item => item.id !== bookId);
+            updateCart();
+        }
+
+        // تبديل السلة
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+        }
+
+        // إتمام الشراء
+        function checkout() {
+            if (cart.length === 0) {
+                alert('السلة فارغة! أضف بعض الكتب أولاً');
+                return;
+            }
+            
+            alert(`شكراً لشرائك من dimo!\nإجمالي المشتريات: ${cartTotal} ج.م`);
+            cart = [];
+            updateCart();
+            toggleCart();
+        }
+
+        // ==================== المصادقة ====================
+        function openAuth() {
+            document.getElementById('authModal').style.display = 'flex';
+        }
+
+        function closeAuth() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function switchAuthTab(tab) {
+            const tabs = document.querySelectorAll('.auth-tab');
+            const forms = document.querySelectorAll('.auth-form');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            forms.forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+
+        // إغلاق المودال عند الضغط خارجها
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target === modal) {
+                closeAuth();
+            }
+        }
+
+        // ==================== التهيئة ====================
+        displayBooks();
+
+        // جعل الدوال معرفة عالمياً
+        window.openAuth = openAuth;
+        window.closeAuth = closeAuth;
+        window.switchAuthTab = switchAuthTab;
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.toggleCart = toggleCart;
+        window.checkout = checkout;
+    </script>
+</body>
+</html>
