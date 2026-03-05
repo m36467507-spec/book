@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dimo - نظام إدارة الكتب المتقدم</title>
+    <title>dimo - مكتبتك الرقمية</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
             font-family: 'Cairo', 'Tajawal', sans-serif;
         }
 
-        /* الخلفية مع اسم dimo */
+        /* الخلفية مع اسم dimo متحرك */
         body {
             background: linear-gradient(135deg, #0a0f1e 0%, #1a1f2e 100%);
             min-height: 100vh;
@@ -20,26 +20,62 @@
             color: #e0e0e0;
         }
 
+        /* خلفية باسم dimo متحرك */
         body::before {
             content: 'dimo';
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 20vw;
+            font-size: 25vw;
             font-weight: 900;
-            color: rgba(255, 255, 255, 0.03);
+            color: rgba(108, 92, 231, 0.03);
             z-index: -1;
             white-space: nowrap;
             pointer-events: none;
-            letter-spacing: 20px;
+            letter-spacing: 30px;
             text-transform: uppercase;
-            animation: floatDimo 20s ease-in-out infinite;
+            animation: floatDimo 15s ease-in-out infinite;
+            text-shadow: 0 0 50px rgba(108, 92, 231, 0.1);
+        }
+
+        /* طبقة ثانية من dimo للعمق */
+        body::after {
+            content: 'dimo';
+            position: fixed;
+            bottom: 10%;
+            right: 5%;
+            font-size: 8vw;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.02);
+            z-index: -1;
+            white-space: nowrap;
+            pointer-events: none;
+            transform: rotate(-15deg);
+            animation: floatDimoReverse 20s ease-in-out infinite;
         }
 
         @keyframes floatDimo {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
-            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.05; }
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1) rotate(0deg); 
+                opacity: 0.03; 
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1) rotate(2deg); 
+                opacity: 0.06; 
+                text-shadow: 0 0 80px rgba(108, 92, 231, 0.2);
+            }
+        }
+
+        @keyframes floatDimoReverse {
+            0%, 100% { 
+                transform: rotate(-15deg) scale(1); 
+                opacity: 0.02; 
+            }
+            50% { 
+                transform: rotate(-10deg) scale(1.2); 
+                opacity: 0.04; 
+            }
         }
 
         /* إضاءة ديناميكية منخفضة */
@@ -50,8 +86,8 @@
             width: 100%;
             height: 100%;
             background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-                        rgba(255, 255, 255, 0.08) 0%, 
-                        rgba(0, 0, 0, 0.9) 70%);
+                        rgba(108, 92, 231, 0.1) 0%, 
+                        rgba(0, 0, 0, 0.95) 70%);
             pointer-events: none;
             z-index: 1;
             transition: background 0.1s;
@@ -61,7 +97,7 @@
         nav {
             background: rgba(10, 15, 30, 0.8);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid #6c5ce7;
             padding: 1rem 2rem;
             position: sticky;
             top: 0;
@@ -77,11 +113,28 @@
         }
 
         .logo {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 900;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            background: linear-gradient(135deg, #fff, #6c5ce7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             letter-spacing: 2px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: 'dimo';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.5;
+            filter: blur(10px);
+            z-index: -1;
         }
 
         .logo span {
@@ -124,6 +177,47 @@
             color: #6c5ce7;
         }
 
+        /* رقم الهاتف في الناف بار */
+        .phone-number {
+            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 20px rgba(108,92,231,0.3);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 5px 20px rgba(108,92,231,0.3); }
+            50% { box-shadow: 0 10px 30px rgba(108,92,231,0.6); }
+        }
+
+        .phone-number i {
+            font-size: 1.3rem;
+        }
+
+        .cart-icon {
+            position: relative;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
         /* Admin Panel Button */
         .admin-btn {
             background: #6c5ce7;
@@ -142,23 +236,6 @@
         .admin-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(108,92,231,0.3);
-        }
-
-        .cart-icon {
-            position: relative;
-            font-size: 1.3rem;
-            cursor: pointer;
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #6c5ce7;
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 50%;
         }
 
         /* Admin Panel */
@@ -193,6 +270,11 @@
         .admin-header h2 {
             color: white;
             font-size: 2rem;
+        }
+
+        .admin-header h2 i {
+            color: #6c5ce7;
+            margin-left: 0.5rem;
         }
 
         .close-admin {
@@ -254,6 +336,11 @@
             color: white;
             margin-bottom: 1.5rem;
             font-size: 1.5rem;
+        }
+
+        .add-book-form h3 i {
+            color: #6c5ce7;
+            margin-left: 0.5rem;
         }
 
         .form-row {
@@ -398,14 +485,52 @@
         .hero {
             padding: 4rem 2rem;
             text-align: center;
+            background: rgba(108, 92, 231, 0.1);
+            border-radius: 30px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(108, 92, 231, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: 'dimo';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10rem;
+            font-weight: 900;
+            color: rgba(108, 92, 231, 0.1);
+            white-space: nowrap;
+            z-index: -1;
         }
 
         .hero h1 {
             font-size: 4rem;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, #a0a0a0);
+            background: linear-gradient(135deg, #fff, #6c5ce7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .hero .phone-large {
+            font-size: 2.5rem;
+            color: white;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 30px rgba(108,92,231,0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .hero p {
@@ -513,6 +638,15 @@
         }
 
         .book-cover::before {
+            content: 'dimo';
+            position: absolute;
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(255,255,255,0.1);
+            transform: rotate(-15deg);
+        }
+
+        .book-cover::after {
             content: '';
             position: absolute;
             width: 200%;
@@ -609,7 +743,7 @@
             height: 100vh;
             background: rgba(20, 25, 40, 0.95);
             backdrop-filter: blur(10px);
-            border-left: 1px solid rgba(255,255,255,0.1);
+            border-left: 2px solid #6c5ce7;
             z-index: 200;
             transition: right 0.3s;
             padding: 2rem;
@@ -626,12 +760,17 @@
             align-items: center;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 2px solid #6c5ce7;
         }
 
         .cart-header h3 {
             color: white;
             font-size: 1.5rem;
+        }
+
+        .cart-header h3 i {
+            color: #6c5ce7;
+            margin-left: 0.5rem;
         }
 
         .close-cart {
@@ -756,11 +895,47 @@
             box-shadow: 0 10px 20px rgba(0,184,148,0.3);
         }
 
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: linear-gradient(135deg, #25d366, #128C7E);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(37,211,102,0.3);
+            z-index: 99;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            animation: whatsappPulse 2s infinite;
+        }
+
+        @keyframes whatsappPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 15px 40px rgba(37,211,102,0.5);
+        }
+
+        .whatsapp-btn i {
+            font-size: 2rem;
+        }
+
         /* Footer */
         footer {
             background: rgba(10, 15, 30, 0.8);
             backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 2px solid #6c5ce7;
             padding: 3rem 2rem 1rem;
             margin-top: 4rem;
         }
@@ -779,6 +954,11 @@
             font-size: 1.2rem;
         }
 
+        .footer-section h4 i {
+            color: #6c5ce7;
+            margin-left: 0.5rem;
+        }
+
         .footer-section p {
             color: #a0a0a0;
             line-height: 1.8;
@@ -790,6 +970,14 @@
 
         .footer-section ul li {
             margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section ul li i {
+            color: #6c5ce7;
+            width: 20px;
         }
 
         .footer-section ul li a {
@@ -833,6 +1021,13 @@
             color: #a0a0a0;
         }
 
+        .footer-bottom .dimo-signature {
+            color: #6c5ce7;
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
@@ -841,6 +1036,10 @@
             
             .hero h1 {
                 font-size: 2.5rem;
+            }
+            
+            .hero .phone-large {
+                font-size: 1.5rem;
             }
             
             .cart-sidebar {
@@ -854,6 +1053,13 @@
             
             .form-row {
                 grid-template-columns: 1fr;
+            }
+            
+            .whatsapp-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                bottom: 1rem;
+                left: 1rem;
             }
         }
     </style>
@@ -879,6 +1085,11 @@
                 <a href="#" onclick="showSection('offers')">عروض</a>
             </div>
             <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <!-- رقم الهاتف في الناف بار -->
+                <div class="phone-number">
+                    <i class="fas fa-phone-alt"></i>
+                    01060131138
+                </div>
                 <button class="admin-btn" onclick="openAdminPanel()">
                     <i class="fas fa-cog"></i> لوحة التحكم
                 </button>
@@ -894,7 +1105,7 @@
     <div class="admin-panel" id="adminPanel">
         <div class="admin-container">
             <div class="admin-header">
-                <h2><i class="fas fa-cog"></i> لوحة التحكم - إدارة الكتب</h2>
+                <h2><i class="fas fa-cog"></i> dimo - لوحة التحكم</h2>
                 <span class="close-admin" onclick="closeAdminPanel()">×</span>
             </div>
 
@@ -924,7 +1135,7 @@
 
             <!-- إضافة كتاب جديد -->
             <div class="add-book-form">
-                <h3><i class="fas fa-plus-circle"></i> إضافة كتاب جديد</h3>
+                <h3><i class="fas fa-plus-circle"></i> إضافة كتاب جديد - dimo</h3>
                 <div class="form-row">
                     <div class="form-group">
                         <label>عنوان الكتاب</label>
@@ -988,14 +1199,14 @@
                     </div>
                 </div>
                 <button class="submit-btn" onclick="addBook()">
-                    <i class="fas fa-save"></i> حفظ الكتاب
+                    <i class="fas fa-save"></i> حفظ الكتاب - dimo
                 </button>
             </div>
 
             <!-- جدول الكتب -->
             <div class="books-table-container">
                 <h3 style="color: white; margin-bottom: 1.5rem;">
-                    <i class="fas fa-list"></i> قائمة الكتب
+                    <i class="fas fa-list"></i> قائمة الكتب - dimo
                 </h3>
                 <table class="books-table" id="booksTable">
                     <thead>
@@ -1022,7 +1233,7 @@
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
-            <h3>سلة المشتريات</h3>
+            <h3><i class="fas fa-shopping-cart"></i> سلة dimo</h3>
             <span class="close-cart" onclick="toggleCart()">×</span>
         </div>
         <div class="cart-items" id="cartItems">
@@ -1035,15 +1246,26 @@
             </div>
         </div>
         <button class="checkout-btn" onclick="checkout()">
-            <i class="fas fa-credit-card"></i> إتمام الشراء
+            <i class="fas fa-credit-card"></i> إتمام الشراء - dimo
         </button>
     </div>
+
+    <!-- WhatsApp Button -->
+    <button class="whatsapp-btn" onclick="openWhatsApp()">
+        <i class="fab fa-whatsapp"></i>
+        <span>01060131138</span>
+    </button>
 
     <!-- Main Content -->
     <div class="main-content" id="mainContent">
         <!-- Hero Section -->
         <section class="hero">
-            <h1>اكتشف عالم الكتب</h1>
+            <h1>مرحباً بك في dimo</h1>
+            <div class="phone-large">
+                <i class="fas fa-phone-alt"></i>
+                <span>01060131138</span>
+                <i class="fas fa-book-open"></i>
+            </div>
             <p>أكبر مكتبة رقمية عربية - آلاف الكتب في انتظارك</p>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="ابحث عن كتاب، مؤلف، أو تصنيف...">
@@ -1071,7 +1293,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h4>عن dimo</h4>
+                <h4><i class="fas fa-book"></i> عن dimo</h4>
                 <p>أكبر مكتبة رقمية عربية، نوفر آلاف الكتب في مختلف المجالات بأسعار مميزة وتوصيل سريع.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -1082,39 +1304,39 @@
             </div>
             
             <div class="footer-section">
-                <h4>روابط سريعة</h4>
+                <h4><i class="fas fa-link"></i> روابط سريعة</h4>
                 <ul>
-                    <li><a href="#" onclick="showSection('home')">الرئيسية</a></li>
-                    <li><a href="#" onclick="showSection('about')">عن المكتبة</a></li>
-                    <li><a href="#" onclick="showSection('books')">الكتب</a></li>
-                    <li><a href="#" onclick="showSection('categories')">التصنيفات</a></li>
-                    <li><a href="#" onclick="showSection('bestsellers')">الأكثر مبيعاً</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('home')">الرئيسية</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('about')">عن المكتبة</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('books')">الكتب</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('categories')">التصنيفات</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('bestsellers')">الأكثر مبيعاً</a></li>
                 </ul>
             </div>
             
             <div class="footer-section">
-                <h4>خدمات العملاء</h4>
+                <h4><i class="fas fa-headset"></i> خدمات العملاء</h4>
                 <ul>
-                    <li><a href="#">اتصل بنا</a></li>
-                    <li><a href="#">الشحن والتوصيل</a></li>
-                    <li><a href="#">سياسة الإرجاع</a></li>
-                    <li><a href="#">الشروط والأحكام</a></li>
-                    <li><a href="#">الخصوصية</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h4>تواصل معنا</h4>
-                <ul>
-                    <li><i class="fas fa-phone"></i> 0123456789</li>
+                    <li><i class="fas fa-phone"></i> 01060131138</li>
                     <li><i class="fas fa-envelope"></i> info@dimo.com</li>
                     <li><i class="fas fa-map-marker-alt"></i> القاهرة، مصر</li>
+                    <li><i class="fab fa-whatsapp"></i> 01060131138</li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4><i class="fas fa-clock"></i> ساعات العمل</h4>
+                <ul>
+                    <li><i class="fas fa-calendar"></i> السبت - الخميس</li>
+                    <li><i class="fas fa-clock"></i> 9:00 ص - 10:00 م</li>
+                    <li><i class="fas fa-phone"></i> اتصل بنا الآن</li>
                 </ul>
             </div>
         </div>
         
         <div class="footer-bottom">
             <p>© 2024 dimo - جميع الحقوق محفوظة</p>
+            <p class="dimo-signature">dimo ✦ 01060131138</p>
         </div>
     </footer>
 
@@ -1128,6 +1350,13 @@
             overlay.style.setProperty('--mouse-x', x + '%');
             overlay.style.setProperty('--mouse-y', y + '%');
         });
+
+        // ==================== فتح واتساب ====================
+        function openWhatsApp() {
+            const phone = '01060131138';
+            const message = 'مرحباً dimo، أريد الاستفسار عن الكتب';
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
 
         // ==================== تخزين الكتب ====================
         let books = JSON.parse(localStorage.getItem('dimoBooks')) || [];
@@ -1160,7 +1389,7 @@
                     <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #a0a0a0;">
                         <i class="fas fa-book-open" style="font-size: 5rem; margin-bottom: 1rem;"></i>
                         <h3>لا توجد كتب متاحة</h3>
-                        <p>استخدم لوحة التحكم لإضافة كتب جديدة</p>
+                        <p>استخدم لوحة التحكم لإضافة كتب جديدة - dimo</p>
                     </div>
                 `;
                 return;
@@ -1186,7 +1415,7 @@
                         </div>
                         <button class="add-to-cart" onclick="addToCart(${book.id})" ${book.stock === 0 ? 'disabled' : ''}>
                             <i class="fas fa-cart-plus"></i> 
-                            ${book.stock === 0 ? 'نفذت الكمية' : 'أضف إلى السلة'}
+                            ${book.stock === 0 ? 'نفذت الكمية' : 'أضف إلى السلة - dimo'}
                         </button>
                     </div>
                 </div>
@@ -1220,7 +1449,7 @@
             const icon = document.getElementById('bookIcon').value;
             
             if (!title || !author || !price || !stock) {
-                alert('❌ الرجاء ملء جميع الحقول المطلوبة');
+                alert('❌ الرجاء ملء جميع الحقول المطلوبة - dimo');
                 return;
             }
             
@@ -1253,12 +1482,12 @@
             document.getElementById('bookDescription').value = '';
             document.getElementById('bookImage').value = '';
             
-            alert('✅ تم إضافة الكتاب بنجاح');
+            alert('✅ تم إضافة الكتاب بنجاح - dimo');
         }
 
         // ==================== حذف كتاب ====================
         function deleteBook(bookId) {
-            if (confirm('هل أنت متأكد من حذف هذا الكتاب؟')) {
+            if (confirm('هل أنت متأكد من حذف هذا الكتاب؟ - dimo')) {
                 books = books.filter(book => book.id !== bookId);
                 saveBooks();
                 updateBooksTable();
@@ -1272,16 +1501,16 @@
             const book = books.find(b => b.id === bookId);
             if (!book) return;
             
-            const newTitle = prompt('تعديل العنوان:', book.title);
+            const newTitle = prompt('تعديل العنوان - dimo:', book.title);
             if (newTitle) book.title = newTitle;
             
-            const newAuthor = prompt('تعديل المؤلف:', book.author);
+            const newAuthor = prompt('تعديل المؤلف - dimo:', book.author);
             if (newAuthor) book.author = newAuthor;
             
-            const newPrice = prompt('تعديل السعر:', book.price);
+            const newPrice = prompt('تعديل السعر - dimo:', book.price);
             if (newPrice) book.price = parseFloat(newPrice);
             
-            const newStock = prompt('تعديل الكمية:', book.stock);
+            const newStock = prompt('تعديل الكمية - dimo:', book.stock);
             if (newStock) book.stock = parseInt(newStock);
             
             saveBooks();
@@ -1351,7 +1580,7 @@
                 if (existingItem.quantity < book.stock) {
                     existingItem.quantity++;
                 } else {
-                    alert('❌ الكمية المطلوبة غير متوفرة');
+                    alert('❌ الكمية المطلوبة غير متوفرة - dimo');
                     return;
                 }
             } else {
@@ -1412,7 +1641,7 @@
                 saveCart();
                 updateCart();
             } else {
-                alert('❌ الكمية المطلوبة غير متوفرة');
+                alert('❌ الكمية المطلوبة غير متوفرة - dimo');
             }
         }
 
@@ -1431,7 +1660,7 @@
         // ==================== إتمام الشراء ====================
         function checkout() {
             if (cart.length === 0) {
-                alert('السلة فارغة!');
+                alert('السلة فارغة! - dimo');
                 return;
             }
             
@@ -1446,7 +1675,7 @@
             
             saveBooks();
             
-            alert(`✅ تم إتمام الشراء بنجاح!\nالمجموع: ${cart.reduce((sum, i) => sum + (i.price * i.quantity), 0)} ج.م`);
+            alert(`✅ تم إتمام الشراء بنجاح - dimo!\nالمجموع: ${cart.reduce((sum, i) => sum + (i.price * i.quantity), 0)} ج.م\nللتواصل: 01060131138`);
             
             cart = [];
             saveCart();
@@ -1494,7 +1723,6 @@
 
         // ==================== إظهار الأقسام ====================
         function showSection(section) {
-            // يمكن إضافة منطق التنقل بين الأقسام هنا
             console.log('Showing section:', section);
         }
 
@@ -1550,6 +1778,7 @@
         window.checkout = checkout;
         window.filterBooks = filterBooks;
         window.showSection = showSection;
+        window.openWhatsApp = openWhatsApp;
 
         // بدء التطبيق
         init();
