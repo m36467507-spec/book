@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dimo - مكتبتك الرقمية</title>
+    <title>dimo - نظام إدارة الكتب المتقدم</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,6 @@
             color: #e0e0e0;
         }
 
-        /* خلفية باسم dimo */
         body::before {
             content: 'dimo';
             position: fixed;
@@ -125,6 +124,26 @@
             color: #6c5ce7;
         }
 
+        /* Admin Panel Button */
+        .admin-btn {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108,92,231,0.3);
+        }
+
         .cart-icon {
             position: relative;
             font-size: 1.3rem;
@@ -142,64 +161,110 @@
             border-radius: 50%;
         }
 
-        /* Auth Modal */
-        .auth-modal {
+        /* Admin Panel */
+        .admin-panel {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .auth-container {
-            background: rgba(20, 25, 40, 0.95);
+            overflow-y: auto;
             backdrop-filter: blur(10px);
-            padding: 3rem;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 400px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
-        .auth-tabs {
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
             display: flex;
-            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #6c5ce7;
         }
 
-        .auth-tab {
-            flex: 1;
-            padding: 1rem;
-            background: transparent;
-            border: none;
-            color: #e0e0e0;
-            font-weight: 700;
+        .admin-header h2 {
+            color: white;
+            font-size: 2rem;
+        }
+
+        .close-admin {
+            font-size: 3rem;
+            color: #ff4444;
             cursor: pointer;
-            border-bottom: 2px solid transparent;
             transition: all 0.3s;
         }
 
-        .auth-tab.active {
-            border-bottom-color: #6c5ce7;
+        .close-admin:hover {
+            transform: rotate(90deg);
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(30, 35, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
             color: #6c5ce7;
+            margin-bottom: 1rem;
         }
 
-        .auth-form {
-            display: none;
+        .stat-card h3 {
+            color: #a0a0a0;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        .auth-form.active {
-            display: block;
+        .stat-card .stat-number {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Add Book Form */
+        .add-book-form {
+            background: rgba(30, 35, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .add-book-form h3 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
@@ -208,9 +273,11 @@
             color: #a0a0a0;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
-            padding: 1rem;
+            padding: 0.8rem;
             background: rgba(255,255,255,0.1);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 10px;
@@ -219,51 +286,118 @@
             transition: all 0.3s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #6c5ce7;
             box-shadow: 0 0 20px rgba(108,92,231,0.3);
         }
 
-        .auth-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #6c5ce7, #a463f5);
-            border: none;
-            border-radius: 10px;
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #00b894, #00cec9);
             color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
             font-weight: 700;
             font-size: 1.1rem;
             cursor: pointer;
             transition: all 0.3s;
+            width: 100%;
         }
 
-        .auth-btn:hover {
+        .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(108,92,231,0.3);
+            box-shadow: 0 10px 20px rgba(0,184,148,0.3);
         }
 
-        .close-auth {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            font-size: 2rem;
+        /* Books Table */
+        .books-table-container {
+            background: rgba(30, 35, 50, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            overflow-x: auto;
+        }
+
+        .books-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .books-table th {
+            color: #a0a0a0;
+            font-weight: 600;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #6c5ce7;
+        }
+
+        .books-table td {
+            padding: 1rem;
+            text-align: center;
             color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .books-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .book-image {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .book-image i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
             cursor: pointer;
+            margin: 0 0.3rem;
             transition: all 0.3s;
         }
 
-        .close-auth:hover {
+        .edit-btn:hover {
+            color: #fbbf24;
+        }
+
+        .delete-btn:hover {
             color: #ff4444;
-            transform: rotate(90deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
         }
 
         /* Hero Section */
         .hero {
             padding: 4rem 2rem;
             text-align: center;
-            position: relative;
-            z-index: 2;
         }
 
         .hero h1 {
@@ -345,12 +479,10 @@
 
         /* Books Grid */
         .books-grid {
-            max-width: 1400px;
-            margin: 3rem auto;
-            padding: 0 2rem;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
+            margin: 3rem 0;
         }
 
         .book-card {
@@ -371,7 +503,7 @@
         }
 
         .book-cover {
-            height: 300px;
+            height: 200px;
             background: linear-gradient(135deg, #6c5ce7, #a463f5);
             display: flex;
             align-items: center;
@@ -395,23 +527,10 @@
         }
 
         .book-cover i {
-            font-size: 5rem;
+            font-size: 4rem;
             color: white;
             z-index: 1;
             filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-        }
-
-        .book-badge {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: #ff4757;
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            z-index: 2;
         }
 
         .book-info {
@@ -419,7 +538,7 @@
         }
 
         .book-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: white;
             margin-bottom: 0.5rem;
@@ -433,19 +552,35 @@
 
         .book-rating {
             color: #ffd700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .book-price {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: #6c5ce7;
             margin-bottom: 1rem;
         }
 
+        .book-stock {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .book-stock.low {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
         .add-to-cart {
             width: 100%;
-            padding: 1rem;
+            padding: 0.8rem;
             background: linear-gradient(135deg, #6c5ce7, #a463f5);
             border: none;
             border-radius: 10px;
@@ -458,6 +593,11 @@
         .add-to-cart:hover {
             transform: scale(1.02);
             box-shadow: 0 5px 15px rgba(108,92,231,0.4);
+        }
+
+        .add-to-cart:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         /* Cart Sidebar */
@@ -519,8 +659,8 @@
         }
 
         .cart-item-img {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, #6c5ce7, #a463f5);
             border-radius: 10px;
             display: flex;
@@ -529,7 +669,7 @@
         }
 
         .cart-item-img i {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: white;
         }
 
@@ -540,18 +680,47 @@
         .cart-item-title {
             color: white;
             font-weight: 600;
+            font-size: 0.9rem;
             margin-bottom: 0.3rem;
         }
 
         .cart-item-price {
             color: #6c5ce7;
             font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: #6c5ce7;
         }
 
         .remove-item {
             color: #ff4444;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .remove-item:hover {
+            transform: scale(1.1);
         }
 
         .cart-total {
@@ -682,6 +851,10 @@
             .footer-content {
                 grid-template-columns: 1fr;
             }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -699,15 +872,16 @@
                 <span>BOOKS</span>
             </div>
             <div class="nav-links">
-                <a href="#">الرئيسية</a>
-                <a href="#">الكتب</a>
-                <a href="#">التصنيفات</a>
-                <a href="#">الأكثر مبيعاً</a>
-                <a href="#">عروض</a>
-                <a href="#">اتصل بنا</a>
+                <a href="#" onclick="showSection('home')">الرئيسية</a>
+                <a href="#" onclick="showSection('books')">الكتب</a>
+                <a href="#" onclick="showSection('categories')">التصنيفات</a>
+                <a href="#" onclick="showSection('bestsellers')">الأكثر مبيعاً</a>
+                <a href="#" onclick="showSection('offers')">عروض</a>
             </div>
             <div style="display: flex; gap: 1.5rem; align-items: center;">
-                <i class="fas fa-user" style="color: white; cursor: pointer;" onclick="openAuth()"></i>
+                <button class="admin-btn" onclick="openAdminPanel()">
+                    <i class="fas fa-cog"></i> لوحة التحكم
+                </button>
                 <div class="cart-icon" onclick="toggleCart()">
                     <i class="fas fa-shopping-cart" style="color: white;"></i>
                     <span class="cart-count" id="cartCount">0</span>
@@ -716,47 +890,131 @@
         </div>
     </nav>
 
-    <!-- Auth Modal -->
-    <div class="auth-modal" id="authModal">
-        <div class="close-auth" onclick="closeAuth()">×</div>
-        <div class="auth-container">
-            <div class="auth-tabs">
-                <button class="auth-tab active" onclick="switchAuthTab('login')">تسجيل دخول</button>
-                <button class="auth-tab" onclick="switchAuthTab('register')">حساب جديد</button>
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h2><i class="fas fa-cog"></i> لوحة التحكم - إدارة الكتب</h2>
+                <span class="close-admin" onclick="closeAdminPanel()">×</span>
             </div>
-            
-            <!-- Login Form -->
-            <div class="auth-form active" id="loginForm">
-                <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" placeholder="أدخل بريدك الإلكتروني">
+
+            <!-- الإحصائيات -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <i class="fas fa-book"></i>
+                    <h3>إجمالي الكتب</h3>
+                    <span class="stat-number" id="totalBooks">0</span>
                 </div>
-                <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" placeholder="أدخل كلمة المرور">
+                <div class="stat-card">
+                    <i class="fas fa-tags"></i>
+                    <h3>التصنيفات</h3>
+                    <span class="stat-number" id="totalCategories">0</span>
                 </div>
-                <button class="auth-btn">تسجيل الدخول</button>
+                <div class="stat-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3>إجمالي المبيعات</h3>
+                    <span class="stat-number" id="totalSales">0</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-boxes"></i>
+                    <h3>الكتب المتوفرة</h3>
+                    <span class="stat-number" id="totalStock">0</span>
+                </div>
             </div>
-            
-            <!-- Register Form -->
-            <div class="auth-form" id="registerForm">
-                <div class="form-group">
-                    <label>الاسم الكامل</label>
-                    <input type="text" placeholder="أدخل اسمك الكامل">
+
+            <!-- إضافة كتاب جديد -->
+            <div class="add-book-form">
+                <h3><i class="fas fa-plus-circle"></i> إضافة كتاب جديد</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>عنوان الكتاب</label>
+                        <input type="text" id="bookTitle" placeholder="مثال: الأب الغني والأب الفقير">
+                    </div>
+                    <div class="form-group">
+                        <label>المؤلف</label>
+                        <input type="text" id="bookAuthor" placeholder="اسم المؤلف">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" placeholder="أدخل بريدك الإلكتروني">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>السعر (ج.م)</label>
+                        <input type="number" id="bookPrice" placeholder="مثال: 120">
+                    </div>
+                    <div class="form-group">
+                        <label>الكمية المتوفرة</label>
+                        <input type="number" id="bookStock" placeholder="مثال: 50">
+                    </div>
+                    <div class="form-group">
+                        <label>التصنيف</label>
+                        <select id="bookCategory">
+                            <option value="روايات">روايات</option>
+                            <option value="تنمية بشرية">تنمية بشرية</option>
+                            <option value="علوم">علوم</option>
+                            <option value="تاريخ">تاريخ</option>
+                            <option value="دينية">دينية</option>
+                            <option value="أطفال">أطفال</option>
+                            <option value="اقتصاد">اقتصاد</option>
+                            <option value="فلسفة">فلسفة</option>
+                            <option value="طب">طب</option>
+                            <option value="هندسة">هندسة</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" placeholder="أدخل كلمة المرور">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>وصف الكتاب</label>
+                        <textarea id="bookDescription" placeholder="وصف مختصر للكتاب..."></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>تأكيد كلمة المرور</label>
-                    <input type="password" placeholder="أعد إدخال كلمة المرور">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>رابط صورة الغلاف (اختياري)</label>
+                        <input type="url" id="bookImage" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>اختر أيقونة</label>
+                        <select id="bookIcon">
+                            <option value="fa-book">كتاب</option>
+                            <option value="fa-graduation-cap">تعليم</option>
+                            <option value="fa-flask">علوم</option>
+                            <option value="fa-heart">حب</option>
+                            <option value="fa-brain">عقل</option>
+                            <option value="fa-chart-line">اقتصاد</option>
+                            <option value="fa-history">تاريخ</option>
+                            <option value="fa-child">أطفال</option>
+                            <option value="fa-mosque">ديني</option>
+                            <option value="fa-robot">تكنولوجيا</option>
+                        </select>
+                    </div>
                 </div>
-                <button class="auth-btn">إنشاء حساب</button>
+                <button class="submit-btn" onclick="addBook()">
+                    <i class="fas fa-save"></i> حفظ الكتاب
+                </button>
+            </div>
+
+            <!-- جدول الكتب -->
+            <div class="books-table-container">
+                <h3 style="color: white; margin-bottom: 1.5rem;">
+                    <i class="fas fa-list"></i> قائمة الكتب
+                </h3>
+                <table class="books-table" id="booksTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الغلاف</th>
+                            <th>عنوان الكتاب</th>
+                            <th>المؤلف</th>
+                            <th>السعر</th>
+                            <th>الكمية</th>
+                            <th>التصنيف</th>
+                            <th>المبيعات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="booksTableBody">
+                        <!-- سيتم إضافة الكتب هنا ديناميكياً -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -776,33 +1034,38 @@
                 <span id="cartTotal">0 ج.م</span>
             </div>
         </div>
-        <button class="checkout-btn" onclick="checkout()">إتمام الشراء</button>
+        <button class="checkout-btn" onclick="checkout()">
+            <i class="fas fa-credit-card"></i> إتمام الشراء
+        </button>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <h1>اكتشف عالم الكتب</h1>
-        <p>أكبر مكتبة رقمية عربية - آلاف الكتب في انتظارك</p>
-        <div class="search-box">
-            <input type="text" placeholder="ابحث عن كتاب، مؤلف، أو تصنيف...">
-            <i class="fas fa-search"></i>
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>اكتشف عالم الكتب</h1>
+            <p>أكبر مكتبة رقمية عربية - آلاف الكتب في انتظارك</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث عن كتاب، مؤلف، أو تصنيف...">
+                <i class="fas fa-search"></i>
+            </div>
+        </section>
+
+        <!-- Categories -->
+        <div class="categories" id="categories">
+            <button class="category-btn active" onclick="filterBooks('all')">الكل</button>
+            <button class="category-btn" onclick="filterBooks('روايات')">روايات</button>
+            <button class="category-btn" onclick="filterBooks('تنمية بشرية')">تنمية بشرية</button>
+            <button class="category-btn" onclick="filterBooks('علوم')">علوم</button>
+            <button class="category-btn" onclick="filterBooks('تاريخ')">تاريخ</button>
+            <button class="category-btn" onclick="filterBooks('دينية')">دينية</button>
+            <button class="category-btn" onclick="filterBooks('أطفال')">أطفال</button>
+            <button class="category-btn" onclick="filterBooks('اقتصاد')">اقتصاد</button>
         </div>
-    </section>
 
-    <!-- Categories -->
-    <div class="categories">
-        <button class="category-btn active">الكل</button>
-        <button class="category-btn">روايات</button>
-        <button class="category-btn">تنمية بشرية</button>
-        <button class="category-btn">علوم</button>
-        <button class="category-btn">تاريخ</button>
-        <button class="category-btn">دينية</button>
-        <button class="category-btn">أطفال</button>
-        <button class="category-btn">اقتصاد</button>
+        <!-- Books Grid -->
+        <div class="books-grid" id="booksGrid"></div>
     </div>
-
-    <!-- Books Grid -->
-    <div class="books-grid" id="booksGrid"></div>
 
     <!-- Footer -->
     <footer>
@@ -821,11 +1084,11 @@
             <div class="footer-section">
                 <h4>روابط سريعة</h4>
                 <ul>
-                    <li><a href="#">الرئيسية</a></li>
-                    <li><a href="#">عن المكتبة</a></li>
-                    <li><a href="#">الكتب</a></li>
-                    <li><a href="#">التصنيفات</a></li>
-                    <li><a href="#">الأكثر مبيعاً</a></li>
+                    <li><a href="#" onclick="showSection('home')">الرئيسية</a></li>
+                    <li><a href="#" onclick="showSection('about')">عن المكتبة</a></li>
+                    <li><a href="#" onclick="showSection('books')">الكتب</a></li>
+                    <li><a href="#" onclick="showSection('categories')">التصنيفات</a></li>
+                    <li><a href="#" onclick="showSection('bestsellers')">الأكثر مبيعاً</a></li>
                 </ul>
             </div>
             
@@ -866,200 +1129,71 @@
             overlay.style.setProperty('--mouse-y', y + '%');
         });
 
-        // ==================== قاعدة بيانات الكتب ====================
-        const books = [
-            {
-                id: 1,
-                title: "الأب الغني والأب الفقير",
-                author: "روبرت كيوساكي",
-                price: 120,
-                rating: 4.8,
-                category: "اقتصاد",
-                sales: 1500,
-                icon: "fa-chart-line"
-            },
-            {
-                id: 2,
-                title: "العادات السبع للناس الأكثر فعالية",
-                author: "ستيفن كوفي",
-                price: 150,
-                rating: 4.9,
-                category: "تنمية بشرية",
-                sales: 2000,
-                icon: "fa-clock"
-            },
-            {
-                id: 3,
-                title: "فن اللامبالاة",
-                author: "مارك مانسون",
-                price: 90,
-                rating: 4.7,
-                category: "تنمية بشرية",
-                sales: 1800,
-                icon: "fa-heart"
-            },
-            {
-                id: 4,
-                title: "مائة عام من العزلة",
-                author: "جابرييل ماركيز",
-                price: 110,
-                rating: 4.9,
-                category: "روايات",
-                sales: 2200,
-                icon: "fa-book"
-            },
-            {
-                id: 5,
-                title: "1984",
-                author: "جورج أورويل",
-                price: 95,
-                rating: 4.8,
-                category: "روايات",
-                sales: 1900,
-                icon: "fa-eye"
-            },
-            {
-                id: 6,
-                title: "تاريخ موجز للزمن",
-                author: "ستيفن هوكينج",
-                price: 130,
-                rating: 4.7,
-                category: "علوم",
-                sales: 1200,
-                icon: "fa-rocket"
-            },
-            {
-                id: 7,
-                title: "الرجال من المريخ والنساء من الزهرة",
-                author: "جون جراي",
-                price: 100,
-                rating: 4.6,
-                category: "تنمية بشرية",
-                sales: 1600,
-                icon: "fa-venus-mars"
-            },
-            {
-                id: 8,
-                title: "قوة التفكير الإيجابي",
-                author: "نورمان فينسنت",
-                price: 85,
-                rating: 4.5,
-                category: "تنمية بشرية",
-                sales: 1400,
-                icon: "fa-sun"
-            },
-            {
-                id: 9,
-                title: "الأيام",
-                author: "طه حسين",
-                price: 75,
-                rating: 4.8,
-                category: "روايات",
-                sales: 1700,
-                icon: "fa-feather"
-            },
-            {
-                id: 10,
-                title: "البخلاء",
-                author: "الجاحظ",
-                price: 80,
-                rating: 4.6,
-                category: "روايات",
-                sales: 1100,
-                icon: "fa-mask"
-            },
-            {
-                id: 11,
-                title: "مقدمة ابن خلدون",
-                author: "ابن خلدون",
-                price: 140,
-                rating: 4.9,
-                category: "تاريخ",
-                sales: 1300,
-                icon: "fa-scroll"
-            },
-            {
-                id: 12,
-                title: "القرآن الكريم",
-                author: "مصحف المدينة",
-                price: 200,
-                rating: 5.0,
-                category: "دينية",
-                sales: 5000,
-                icon: "fa-star-and-crescent"
-            },
-            {
-                id: 13,
-                title: "صحيح البخاري",
-                author: "الإمام البخاري",
-                price: 180,
-                rating: 5.0,
-                category: "دينية",
-                sales: 3000,
-                icon: "fa-mosque"
-            },
-            {
-                id: 14,
-                title: "قصة الوقت",
-                author: "كارل ساجان",
-                price: 115,
-                rating: 4.7,
-                category: "علوم",
-                sales: 900,
-                icon: "fa-hourglass"
-            },
-            {
-                id: 15,
-                title: "الأمير الصغير",
-                author: "أنطوان دو سانت إكزوبيري",
-                price: 60,
-                rating: 4.8,
-                category: "أطفال",
-                sales: 2500,
-                icon: "fa-crown"
-            },
-            {
-                id: 16,
-                title: "مزرعة الحيوان",
-                author: "جورج أورويل",
-                price: 70,
-                rating: 4.7,
-                category: "روايات",
-                sales: 1600,
-                icon: "fa-hippo"
-            }
-        ];
+        // ==================== تخزين الكتب ====================
+        let books = JSON.parse(localStorage.getItem('dimoBooks')) || [];
 
         // ==================== سلة المشتريات ====================
-        let cart = [];
-        let cartCount = 0;
-        let cartTotal = 0;
+        let cart = JSON.parse(localStorage.getItem('dimoCart')) || [];
 
-        // عرض الكتب
-        function displayBooks() {
+        // ==================== عرض الكتب ====================
+        function displayBooks(filterCategory = 'all', searchTerm = '') {
             const grid = document.getElementById('booksGrid');
-            grid.innerHTML = books.map(book => `
+            
+            let filteredBooks = books;
+            
+            // تصفية حسب التصنيف
+            if (filterCategory !== 'all') {
+                filteredBooks = filteredBooks.filter(book => book.category === filterCategory);
+            }
+            
+            // تصفية حسب البحث
+            if (searchTerm) {
+                filteredBooks = filteredBooks.filter(book => 
+                    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    book.category.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }
+            
+            if (filteredBooks.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #a0a0a0;">
+                        <i class="fas fa-book-open" style="font-size: 5rem; margin-bottom: 1rem;"></i>
+                        <h3>لا توجد كتب متاحة</h3>
+                        <p>استخدم لوحة التحكم لإضافة كتب جديدة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredBooks.map(book => `
                 <div class="book-card">
                     <div class="book-cover">
-                        <i class="fas ${book.icon}"></i>
-                        <span class="book-badge">${book.sales}+ مبيع</span>
+                        ${book.image ? 
+                            `<img src="${book.image}" style="width:100%;height:100%;object-fit:cover;">` : 
+                            `<i class="fas ${book.icon || 'fa-book'}"></i>`
+                        }
                     </div>
                     <div class="book-info">
                         <h3 class="book-title">${book.title}</h3>
                         <p class="book-author">${book.author}</p>
                         <div class="book-rating">
-                            ${generateStars(book.rating)} (${book.rating})
+                            ${generateStars(book.rating || 4.5)}
                         </div>
                         <div class="book-price">${book.price} ج.م</div>
-                        <button class="add-to-cart" onclick="addToCart(${book.id})">
-                            <i class="fas fa-cart-plus"></i> أضف إلى السلة
+                        <div class="book-stock ${book.stock < 10 ? 'low' : ''}">
+                            <i class="fas fa-box"></i> ${book.stock} نسخة متوفرة
+                        </div>
+                        <button class="add-to-cart" onclick="addToCart(${book.id})" ${book.stock === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-cart-plus"></i> 
+                            ${book.stock === 0 ? 'نفذت الكمية' : 'أضف إلى السلة'}
                         </button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // توليد النجوم
+        // ==================== توليد النجوم ====================
         function generateStars(rating) {
             let stars = '';
             for (let i = 1; i <= 5; i++) {
@@ -1074,13 +1208,152 @@
             return stars;
         }
 
-        // إضافة إلى السلة
+        // ==================== إضافة كتاب ====================
+        function addBook() {
+            const title = document.getElementById('bookTitle').value;
+            const author = document.getElementById('bookAuthor').value;
+            const price = parseFloat(document.getElementById('bookPrice').value);
+            const stock = parseInt(document.getElementById('bookStock').value);
+            const category = document.getElementById('bookCategory').value;
+            const description = document.getElementById('bookDescription').value;
+            const image = document.getElementById('bookImage').value;
+            const icon = document.getElementById('bookIcon').value;
+            
+            if (!title || !author || !price || !stock) {
+                alert('❌ الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            const newBook = {
+                id: Date.now(),
+                title,
+                author,
+                price,
+                stock,
+                category,
+                description,
+                image,
+                icon,
+                rating: 4.5,
+                sales: 0,
+                dateAdded: new Date().toISOString()
+            };
+            
+            books.push(newBook);
+            saveBooks();
+            updateBooksTable();
+            updateStats();
+            displayBooks();
+            
+            // تفريغ الحقول
+            document.getElementById('bookTitle').value = '';
+            document.getElementById('bookAuthor').value = '';
+            document.getElementById('bookPrice').value = '';
+            document.getElementById('bookStock').value = '';
+            document.getElementById('bookDescription').value = '';
+            document.getElementById('bookImage').value = '';
+            
+            alert('✅ تم إضافة الكتاب بنجاح');
+        }
+
+        // ==================== حذف كتاب ====================
+        function deleteBook(bookId) {
+            if (confirm('هل أنت متأكد من حذف هذا الكتاب؟')) {
+                books = books.filter(book => book.id !== bookId);
+                saveBooks();
+                updateBooksTable();
+                updateStats();
+                displayBooks();
+            }
+        }
+
+        // ==================== تعديل كتاب ====================
+        function editBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            
+            const newTitle = prompt('تعديل العنوان:', book.title);
+            if (newTitle) book.title = newTitle;
+            
+            const newAuthor = prompt('تعديل المؤلف:', book.author);
+            if (newAuthor) book.author = newAuthor;
+            
+            const newPrice = prompt('تعديل السعر:', book.price);
+            if (newPrice) book.price = parseFloat(newPrice);
+            
+            const newStock = prompt('تعديل الكمية:', book.stock);
+            if (newStock) book.stock = parseInt(newStock);
+            
+            saveBooks();
+            updateBooksTable();
+            displayBooks();
+        }
+
+        // ==================== حفظ الكتب في localStorage ====================
+        function saveBooks() {
+            localStorage.setItem('dimoBooks', JSON.stringify(books));
+            updateStats();
+        }
+
+        // ==================== تحديث جدول الكتب ====================
+        function updateBooksTable() {
+            const tbody = document.getElementById('booksTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = books.map((book, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>
+                        <div class="book-image">
+                            <i class="fas ${book.icon || 'fa-book'}"></i>
+                        </div>
+                    </td>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.price} ج.م</td>
+                    <td>${book.stock}</td>
+                    <td>${book.category}</td>
+                    <td>${book.sales || 0}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editBook(${book.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteBook(${book.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== تحديث الإحصائيات ====================
+        function updateStats() {
+            document.getElementById('totalBooks').textContent = books.length;
+            
+            const categories = [...new Set(books.map(b => b.category))];
+            document.getElementById('totalCategories').textContent = categories.length;
+            
+            const totalSales = books.reduce((sum, b) => sum + (b.sales || 0), 0);
+            document.getElementById('totalSales').textContent = totalSales;
+            
+            const totalStock = books.reduce((sum, b) => sum + b.stock, 0);
+            document.getElementById('totalStock').textContent = totalStock;
+        }
+
+        // ==================== إضافة إلى السلة ====================
         function addToCart(bookId) {
             const book = books.find(b => b.id === bookId);
+            if (!book || book.stock === 0) return;
+            
             const existingItem = cart.find(item => item.id === bookId);
             
             if (existingItem) {
-                existingItem.quantity++;
+                if (existingItem.quantity < book.stock) {
+                    existingItem.quantity++;
+                } else {
+                    alert('❌ الكمية المطلوبة غير متوفرة');
+                    return;
+                }
             } else {
                 cart.push({
                     ...book,
@@ -1088,16 +1361,14 @@
                 });
             }
             
+            saveCart();
             updateCart();
-            
-            // تأثير بسيط
-            alert(`تمت إضافة "${book.title}" إلى السلة`);
         }
 
-        // تحديث السلة
+        // ==================== تحديث السلة ====================
         function updateCart() {
-            cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-            cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
             document.getElementById('cartCount').textContent = cartCount;
             
@@ -1105,11 +1376,16 @@
             cartItems.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="cart-item-img">
-                        <i class="fas ${item.icon}"></i>
+                        <i class="fas ${item.icon || 'fa-book'}"></i>
                     </div>
                     <div class="cart-item-details">
                         <div class="cart-item-title">${item.title}</div>
-                        <div class="cart-item-price">${item.price} ج.م × ${item.quantity}</div>
+                        <div class="cart-item-price">${item.price} ج.م</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
                     </div>
                     <div class="remove-item" onclick="removeFromCart(${item.id})">
                         <i class="fas fa-times"></i>
@@ -1120,74 +1396,163 @@
             document.getElementById('cartTotal').textContent = cartTotal + ' ج.م';
         }
 
-        // إزالة من السلة
+        // ==================== تحديث الكمية ====================
+        function updateQuantity(bookId, change) {
+            const item = cart.find(i => i.id === bookId);
+            const book = books.find(b => b.id === bookId);
+            
+            if (!item || !book) return;
+            
+            const newQuantity = item.quantity + change;
+            
+            if (newQuantity <= 0) {
+                removeFromCart(bookId);
+            } else if (newQuantity <= book.stock) {
+                item.quantity = newQuantity;
+                saveCart();
+                updateCart();
+            } else {
+                alert('❌ الكمية المطلوبة غير متوفرة');
+            }
+        }
+
+        // ==================== إزالة من السلة ====================
         function removeFromCart(bookId) {
             cart = cart.filter(item => item.id !== bookId);
+            saveCart();
             updateCart();
         }
 
-        // تبديل السلة
+        // ==================== حفظ السلة ====================
+        function saveCart() {
+            localStorage.setItem('dimoCart', JSON.stringify(cart));
+        }
+
+        // ==================== إتمام الشراء ====================
+        function checkout() {
+            if (cart.length === 0) {
+                alert('السلة فارغة!');
+                return;
+            }
+            
+            // تحديث المخزون
+            cart.forEach(item => {
+                const book = books.find(b => b.id === item.id);
+                if (book) {
+                    book.stock -= item.quantity;
+                    book.sales = (book.sales || 0) + item.quantity;
+                }
+            });
+            
+            saveBooks();
+            
+            alert(`✅ تم إتمام الشراء بنجاح!\nالمجموع: ${cart.reduce((sum, i) => sum + (i.price * i.quantity), 0)} ج.م`);
+            
+            cart = [];
+            saveCart();
+            updateCart();
+            displayBooks();
+            updateBooksTable();
+            toggleCart();
+        }
+
+        // ==================== تصفية الكتب ====================
+        function filterBooks(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes(category === 'all' ? 'الكل' : category)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            const searchTerm = document.getElementById('searchInput').value;
+            displayBooks(category, searchTerm);
+        }
+
+        // ==================== بحث ====================
+        document.getElementById('searchInput')?.addEventListener('input', (e) => {
+            const activeCategory = document.querySelector('.category-btn.active')?.textContent || 'الكل';
+            const category = activeCategory === 'الكل' ? 'all' : activeCategory;
+            displayBooks(category, e.target.value);
+        });
+
+        // ==================== لوحة التحكم ====================
+        function openAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'block';
+            updateBooksTable();
+            updateStats();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        // ==================== تبديل السلة ====================
         function toggleCart() {
             document.getElementById('cartSidebar').classList.toggle('open');
         }
 
-        // إتمام الشراء
-        function checkout() {
-            if (cart.length === 0) {
-                alert('السلة فارغة! أضف بعض الكتب أولاً');
-                return;
+        // ==================== إظهار الأقسام ====================
+        function showSection(section) {
+            // يمكن إضافة منطق التنقل بين الأقسام هنا
+            console.log('Showing section:', section);
+        }
+
+        // ==================== تهيئة الموقع ====================
+        function init() {
+            // إضافة بعض الكتب الافتراضية إذا كانت القائمة فارغة
+            if (books.length === 0) {
+                books = [
+                    {
+                        id: 1,
+                        title: "الأب الغني والأب الفقير",
+                        author: "روبرت كيوساكي",
+                        price: 120,
+                        stock: 50,
+                        category: "اقتصاد",
+                        description: "كتاب في التنمية المالية",
+                        icon: "fa-chart-line",
+                        rating: 4.8,
+                        sales: 150
+                    },
+                    {
+                        id: 2,
+                        title: "العادات السبع",
+                        author: "ستيفن كوفي",
+                        price: 150,
+                        stock: 30,
+                        category: "تنمية بشرية",
+                        description: "كتاب في تطوير الذات",
+                        icon: "fa-clock",
+                        rating: 4.9,
+                        sales: 200
+                    }
+                ];
+                saveBooks();
             }
             
-            alert(`شكراً لشرائك من dimo!\nإجمالي المشتريات: ${cartTotal} ج.م`);
-            cart = [];
+            displayBooks();
             updateCart();
-            toggleCart();
+            updateBooksTable();
+            updateStats();
         }
-
-        // ==================== المصادقة ====================
-        function openAuth() {
-            document.getElementById('authModal').style.display = 'flex';
-        }
-
-        function closeAuth() {
-            document.getElementById('authModal').style.display = 'none';
-        }
-
-        function switchAuthTab(tab) {
-            const tabs = document.querySelectorAll('.auth-tab');
-            const forms = document.querySelectorAll('.auth-form');
-            
-            tabs.forEach(t => t.classList.remove('active'));
-            forms.forEach(f => f.classList.remove('active'));
-            
-            if (tab === 'login') {
-                tabs[0].classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-            } else {
-                tabs[1].classList.add('active');
-                document.getElementById('registerForm').classList.add('active');
-            }
-        }
-
-        // إغلاق المودال عند الضغط خارجها
-        window.onclick = function(event) {
-            const modal = document.getElementById('authModal');
-            if (event.target === modal) {
-                closeAuth();
-            }
-        }
-
-        // ==================== التهيئة ====================
-        displayBooks();
 
         // جعل الدوال معرفة عالمياً
-        window.openAuth = openAuth;
-        window.closeAuth = closeAuth;
-        window.switchAuthTab = switchAuthTab;
+        window.openAdminPanel = openAdminPanel;
+        window.closeAdminPanel = closeAdminPanel;
+        window.addBook = addBook;
+        window.deleteBook = deleteBook;
+        window.editBook = editBook;
         window.addToCart = addToCart;
         window.removeFromCart = removeFromCart;
+        window.updateQuantity = updateQuantity;
         window.toggleCart = toggleCart;
         window.checkout = checkout;
+        window.filterBooks = filterBooks;
+        window.showSection = showSection;
+
+        // بدء التطبيق
+        init();
     </script>
 </body>
 </html>
