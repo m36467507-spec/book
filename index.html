@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dimo - مكتبتك الرقمية</title>
+    <title>dimo - المكتبة الذكية المتطورة</title>
     <style>
         * {
             margin: 0;
@@ -12,96 +12,145 @@
             font-family: 'Cairo', 'Tajawal', sans-serif;
         }
 
-        /* الخلفية مع اسم dimo متحرك */
+        /* متغيرات متقدمة */
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5649c0;
+            --primary-light: #8a7cf0;
+            --secondary: #a463f5;
+            --accent: #00b894;
+            --danger: #ff4757;
+            --warning: #fbbf24;
+            --dark: #0a0f1e;
+            --darker: #050714;
+            --light: #e0e0e0;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         body {
-            background: linear-gradient(135deg, #0a0f1e 0%, #1a1f2e 100%);
+            background: var(--dark);
             min-height: 100vh;
             position: relative;
-            color: #e0e0e0;
+            color: var(--light);
+            overflow-x: hidden;
         }
 
-        /* خلفية باسم dimo متحرك */
-        body::before {
-            content: 'dimo';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 25vw;
-            font-weight: 900;
-            color: rgba(108, 92, 231, 0.03);
-            z-index: -1;
-            white-space: nowrap;
-            pointer-events: none;
-            letter-spacing: 30px;
-            text-transform: uppercase;
-            animation: floatDimo 15s ease-in-out infinite;
-            text-shadow: 0 0 50px rgba(108, 92, 231, 0.1);
-        }
-
-        /* طبقة ثانية من dimo للعمق */
-        body::after {
-            content: 'dimo';
-            position: fixed;
-            bottom: 10%;
-            right: 5%;
-            font-size: 8vw;
-            font-weight: 900;
-            color: rgba(255, 255, 255, 0.02);
-            z-index: -1;
-            white-space: nowrap;
-            pointer-events: none;
-            transform: rotate(-15deg);
-            animation: floatDimoReverse 20s ease-in-out infinite;
-        }
-
-        @keyframes floatDimo {
-            0%, 100% { 
-                transform: translate(-50%, -50%) scale(1) rotate(0deg); 
-                opacity: 0.03; 
-            }
-            50% { 
-                transform: translate(-50%, -50%) scale(1.1) rotate(2deg); 
-                opacity: 0.06; 
-                text-shadow: 0 0 80px rgba(108, 92, 231, 0.2);
-            }
-        }
-
-        @keyframes floatDimoReverse {
-            0%, 100% { 
-                transform: rotate(-15deg) scale(1); 
-                opacity: 0.02; 
-            }
-            50% { 
-                transform: rotate(-10deg) scale(1.2); 
-                opacity: 0.04; 
-            }
-        }
-
-        /* إضاءة ديناميكية منخفضة */
-        .light-overlay {
+        /* خلفية dimo 3D */
+        .dimo-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-                        rgba(108, 92, 231, 0.1) 0%, 
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .dimo-layer {
+            position: absolute;
+            font-size: 25vw;
+            font-weight: 900;
+            color: rgba(108, 92, 231, 0.03);
+            white-space: nowrap;
+            user-select: none;
+            animation: floatLayer 20s infinite;
+        }
+
+        .dimo-layer-1 {
+            top: 20%;
+            left: 10%;
+            transform: rotate(-15deg);
+            animation-delay: 0s;
+            font-size: 30vw;
+            color: rgba(108, 92, 231, 0.02);
+        }
+
+        .dimo-layer-2 {
+            bottom: 10%;
+            right: 5%;
+            transform: rotate(10deg);
+            animation-delay: -5s;
+            font-size: 35vw;
+            color: rgba(164, 99, 245, 0.02);
+        }
+
+        .dimo-layer-3 {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulseLayer 8s infinite;
+            font-size: 40vw;
+            background: linear-gradient(135deg, rgba(108,92,231,0.02), rgba(164,99,245,0.02));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes floatLayer {
+            0%, 100% { transform: translate(0, 0) rotate(-15deg) scale(1); }
+            50% { transform: translate(2%, 2%) rotate(-10deg) scale(1.1); }
+        }
+
+        @keyframes pulseLayer {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.03; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.06; }
+        }
+
+        /* إضاءة ديناميكية متطورة */
+        .dynamic-lighting {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+                        rgba(108, 92, 231, 0.15) 0%, 
                         rgba(0, 0, 0, 0.95) 70%);
             pointer-events: none;
             z-index: 1;
-            transition: background 0.1s;
+            mix-blend-mode: multiply;
         }
 
-        /* Navigation */
+        /* جسيمات متحركة */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: floatParticle 10s infinite;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Navigation متطور */
         nav {
             background: rgba(10, 15, 30, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid #6c5ce7;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--primary);
             padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .nav-container {
@@ -112,524 +161,275 @@
             align-items: center;
         }
 
+        /* Logo 3D */
+        .logo-3d {
+            perspective: 1000px;
+        }
+
         .logo {
             font-size: 3rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #fff, #6c5ce7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
             position: relative;
+            transform-style: preserve-3d;
+            animation: rotateLogo 10s infinite linear;
         }
 
-        .logo::after {
-            content: 'dimo';
+        .logo-front, .logo-back {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            background: linear-gradient(135deg, #fff, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            opacity: 0.5;
-            filter: blur(10px);
-            z-index: -1;
+        }
+
+        .logo-front {
+            transform: translateZ(10px);
+        }
+
+        .logo-back {
+            transform: translateZ(-10px);
+            filter: blur(5px);
+            opacity: 0.3;
         }
 
         .logo span {
-            color: #6c5ce7;
+            color: var(--primary);
             font-size: 1rem;
             display: block;
-            letter-spacing: 5px;
+            letter-spacing: 8px;
+            margin-top: 0.5rem;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
+        @keyframes rotateLogo {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
         }
 
-        .nav-links a {
-            color: #e0e0e0;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            position: relative;
+        /* رقم الهاتف متطور */
+        .phone-3d {
+            perspective: 1000px;
+            cursor: pointer;
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #6c5ce7;
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-links a:hover {
-            color: #6c5ce7;
-        }
-
-        /* رقم الهاتف في الناف بار */
         .phone-number {
-            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 2rem;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 5px 20px rgba(108,92,231,0.3);
-            animation: glow 2s ease-in-out infinite;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            animation: phoneGlow 2s infinite;
+            box-shadow: 0 10px 30px rgba(108,92,231,0.3);
         }
 
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 5px 20px rgba(108,92,231,0.3); }
-            50% { box-shadow: 0 10px 30px rgba(108,92,231,0.6); }
+        .phone-number::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+        .phone-number:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(108,92,231,0.5);
         }
 
         .phone-number i {
-            font-size: 1.3rem;
+            font-size: 1.8rem;
+            animation: ring 2s infinite;
         }
 
-        .cart-icon {
-            position: relative;
-            font-size: 1.3rem;
-            cursor: pointer;
+        @keyframes ring {
+            0%, 100% { transform: rotate(0); }
+            10%, 30%, 50% { transform: rotate(15deg); }
+            20%, 40% { transform: rotate(-15deg); }
         }
 
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #ff4757;
-            color: white;
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 50%;
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
         }
 
-        /* Admin Panel Button */
-        .admin-btn {
-            background: #6c5ce7;
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        @keyframes phoneGlow {
+            0%, 100% { box-shadow: 0 10px 30px rgba(108,92,231,0.3); }
+            50% { box-shadow: 0 20px 50px rgba(108,92,231,0.6); }
         }
 
-        .admin-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(108,92,231,0.3);
-        }
-
-        /* Admin Panel */
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
-        }
-
-        .admin-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 2rem;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #6c5ce7;
-        }
-
-        .admin-header h2 {
-            color: white;
-            font-size: 2rem;
-        }
-
-        .admin-header h2 i {
-            color: #6c5ce7;
-            margin-left: 0.5rem;
-        }
-
-        .close-admin {
-            font-size: 3rem;
-            color: #ff4444;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .close-admin:hover {
-            transform: rotate(90deg);
-        }
-
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: rgba(30, 35, 50, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-card i {
-            font-size: 2.5rem;
-            color: #6c5ce7;
-            margin-bottom: 1rem;
-        }
-
-        .stat-card h3 {
-            color: #a0a0a0;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card .stat-number {
-            color: white;
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        /* Add Book Form */
-        .add-book-form {
-            background: rgba(30, 35, 50, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .add-book-form h3 {
-            color: white;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-        }
-
-        .add-book-form h3 i {
-            color: #6c5ce7;
-            margin-left: 0.5rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #a0a0a0;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #6c5ce7;
-            box-shadow: 0 0 20px rgba(108,92,231,0.3);
-        }
-
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #00b894, #00cec9);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,184,148,0.3);
-        }
-
-        /* Books Table */
-        .books-table-container {
-            background: rgba(30, 35, 50, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 2rem;
-            overflow-x: auto;
-        }
-
-        .books-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .books-table th {
-            color: #a0a0a0;
-            font-weight: 600;
-            padding: 1rem;
-            text-align: center;
-            border-bottom: 2px solid #6c5ce7;
-        }
-
-        .books-table td {
-            padding: 1rem;
-            text-align: center;
-            color: white;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .books-table tr:hover {
-            background: rgba(255,255,255,0.05);
-        }
-
-        .book-image {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #6c5ce7, #a463f5);
-            border-radius: 10px;
+        /* Hero Section متطور */
+        .hero {
+            min-height: 80vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto;
-        }
-
-        .book-image i {
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        .action-btn {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            margin: 0 0.3rem;
-            transition: all 0.3s;
-        }
-
-        .edit-btn:hover {
-            color: #fbbf24;
-        }
-
-        .delete-btn:hover {
-            color: #ff4444;
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            text-align: center;
+            padding: 4rem 2rem;
             position: relative;
             z-index: 2;
         }
 
-        /* Hero Section */
-        .hero {
-            padding: 4rem 2rem;
-            text-align: center;
-            background: rgba(108, 92, 231, 0.1);
-            border-radius: 30px;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(108, 92, 231, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: 'dimo';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10rem;
-            font-weight: 900;
-            color: rgba(108, 92, 231, 0.1);
-            white-space: nowrap;
-            z-index: -1;
+        .hero-content {
+            max-width: 1000px;
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 6rem;
+            font-weight: 900;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, #6c5ce7);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1 .dimo-text {
+            background: linear-gradient(135deg, #fff, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-
-        .hero .phone-large {
-            font-size: 2.5rem;
-            color: white;
-            margin: 1rem 0;
-            padding: 1rem;
-            background: linear-gradient(135deg, #6c5ce7, #a463f5);
-            border-radius: 50px;
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: 0 10px 30px rgba(108,92,231,0.5);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            color: #b0b0b0;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-
-        .search-box {
-            max-width: 600px;
-            margin: 0 auto;
             position: relative;
+            animation: textGlow 3s infinite;
         }
 
-        .search-box input {
-            width: 100%;
-            padding: 1.2rem 1.5rem;
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 50px;
-            color: white;
-            font-size: 1.1rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #6c5ce7;
-            box-shadow: 0 0 30px rgba(108,92,231,0.3);
-        }
-
-        .search-box i {
+        .hero h1 .dimo-text::before {
+            content: 'dimo';
             position: absolute;
-            left: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #6c5ce7;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: blur(20px);
+            opacity: 0.5;
+            z-index: -1;
         }
 
-        /* Categories */
-        .categories {
-            padding: 2rem;
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 30px rgba(108,92,231,0.3); }
+            50% { text-shadow: 0 0 60px rgba(108,92,231,0.6); }
+        }
+
+        .hero-phone {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 2rem 0;
             display: flex;
-            gap: 1rem;
+            align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .category-btn {
-            padding: 0.8rem 2rem;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50px;
-            color: #e0e0e0;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-        }
-
-        .category-btn:hover {
-            background: #6c5ce7;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(108,92,231,0.3);
-        }
-
-        .category-btn.active {
-            background: #6c5ce7;
-        }
-
-        /* Books Grid */
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
+            animation: float 3s infinite;
+        }
+
+        .hero-phone i {
+            font-size: 4rem;
+            color: var(--primary);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
             margin: 3rem 0;
         }
 
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+            animation: countUp 2s;
+        }
+
+        .stat-label {
+            color: var(--light);
+            opacity: 0.8;
+        }
+
+        /* بطاقات الكتب المتطورة */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
         .book-card {
-            background: rgba(30, 35, 50, 0.7);
+            background: var(--glass);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
             overflow: hidden;
-            transition: all 0.3s;
+            transition: all 0.5s;
             cursor: pointer;
             position: relative;
+            transform-style: preserve-3d;
+            animation: cardAppear 0.5s ease-out;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(50px) rotateX(10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
         }
 
         .book-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(108,92,231,0.2);
-            border-color: #6c5ce7;
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 0 30px 50px rgba(108,92,231,0.3);
+            border-color: var(--primary);
+        }
+
+        .book-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.5s;
+            transform-origin: left;
+        }
+
+        .book-card:hover::before {
+            transform: scaleX(1);
         }
 
         .book-cover {
-            height: 200px;
-            background: linear-gradient(135deg, #6c5ce7, #a463f5);
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -640,114 +440,51 @@
         .book-cover::before {
             content: 'dimo';
             position: absolute;
-            font-size: 5rem;
+            font-size: 8rem;
             font-weight: 900;
             color: rgba(255,255,255,0.1);
             transform: rotate(-15deg);
+            animation: slideDimo 10s infinite;
         }
 
-        .book-cover::after {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        @keyframes slideDimo {
+            0%, 100% { transform: rotate(-15deg) translateX(-20%); }
+            50% { transform: rotate(-15deg) translateX(20%); }
         }
 
         .book-cover i {
-            font-size: 4rem;
+            font-size: 5rem;
             color: white;
             z-index: 1;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            animation: floatIcon 3s infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .book-info {
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
-        .book-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .book-author {
-            color: #a0a0a0;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .book-rating {
-            color: #ffd700;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .book-price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #6c5ce7;
-            margin-bottom: 1rem;
-        }
-
-        .book-stock {
-            display: inline-block;
-            padding: 0.3rem 1rem;
-            background: rgba(46, 204, 113, 0.2);
-            color: #2ecc71;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .book-stock.low {
-            background: rgba(231, 76, 60, 0.2);
-            color: #e74c3c;
-        }
-
-        .add-to-cart {
-            width: 100%;
-            padding: 0.8rem;
-            background: linear-gradient(135deg, #6c5ce7, #a463f5);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .add-to-cart:hover {
-            transform: scale(1.02);
-            box-shadow: 0 5px 15px rgba(108,92,231,0.4);
-        }
-
-        .add-to-cart:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Cart Sidebar */
+        /* سلة التسوق المتطورة */
         .cart-sidebar {
             position: fixed;
             top: 0;
-            right: -400px;
-            width: 400px;
+            right: -500px;
+            width: 500px;
             height: 100vh;
-            background: rgba(20, 25, 40, 0.95);
-            backdrop-filter: blur(10px);
-            border-left: 2px solid #6c5ce7;
-            z-index: 200;
-            transition: right 0.3s;
+            background: rgba(10, 15, 30, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 2px solid var(--primary);
+            z-index: 1000;
+            transition: right 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             padding: 2rem;
             overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
         }
 
         .cart-sidebar.open {
@@ -760,184 +497,157 @@
             align-items: center;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid #6c5ce7;
+            border-bottom: 2px solid var(--primary);
         }
 
         .cart-header h3 {
+            font-size: 2rem;
             color: white;
-            font-size: 1.5rem;
         }
 
         .cart-header h3 i {
-            color: #6c5ce7;
+            color: var(--primary);
             margin-left: 0.5rem;
         }
 
-        .close-cart {
-            font-size: 2rem;
-            color: #a0a0a0;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .close-cart:hover {
-            color: #ff4444;
-        }
-
-        .cart-items {
-            margin-bottom: 2rem;
-        }
-
-        .cart-item {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-        }
-
-        .cart-item-img {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #6c5ce7, #a463f5);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cart-item-img i {
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        .cart-item-details {
-            flex: 1;
-        }
-
-        .cart-item-title {
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .cart-item-price {
-            color: #6c5ce7;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .cart-item-quantity {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .quantity-btn {
-            width: 25px;
-            height: 25px;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .quantity-btn:hover {
-            background: #6c5ce7;
-        }
-
-        .remove-item {
-            color: #ff4444;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-        }
-
-        .remove-item:hover {
-            transform: scale(1.1);
-        }
-
-        .cart-total {
-            padding: 1rem;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
-
-        .cart-total div {
-            display: flex;
-            justify-content: space-between;
-            color: white;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .checkout-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #00b894, #00cec9);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .checkout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,184,148,0.3);
-        }
-
-        /* WhatsApp Button */
-        .whatsapp-btn {
+        /* زر الواتساب المتطور */
+        .whatsapp-advanced {
             position: fixed;
             bottom: 2rem;
             left: 2rem;
+            z-index: 99;
+            perspective: 1000px;
+        }
+
+        .whatsapp-btn {
             background: linear-gradient(135deg, #25d366, #128C7E);
             color: white;
-            padding: 1rem 2rem;
-            border-radius: 50px;
+            border: none;
+            padding: 1.5rem 2.5rem;
+            border-radius: 70px;
+            font-size: 1.3rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 1rem;
-            font-weight: 700;
-            font-size: 1.2rem;
-            box-shadow: 0 10px 30px rgba(37,211,102,0.3);
-            z-index: 99;
             cursor: pointer;
             transition: all 0.3s;
-            border: none;
+            position: relative;
+            overflow: hidden;
+            animation: whatsappFloat 3s infinite;
+            box-shadow: 0 20px 40px rgba(37,211,102,0.3);
+        }
+
+        .whatsapp-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 3s infinite;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.1) rotateY(10deg);
+            box-shadow: 0 30px 60px rgba(37,211,102,0.5);
+        }
+
+        .whatsapp-btn i {
+            font-size: 2.5rem;
             animation: whatsappPulse 2s infinite;
         }
 
         @keyframes whatsappPulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.2); }
         }
 
-        .whatsapp-btn:hover {
-            transform: scale(1.1) translateY(-5px);
-            box-shadow: 0 15px 40px rgba(37,211,102,0.5);
+        @keyframes whatsappFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        .whatsapp-btn i {
-            font-size: 2rem;
-        }
-
-        /* Footer */
-        footer {
-            background: rgba(10, 15, 30, 0.8);
+        /* شريط الإحصائيات المتحرك */
+        .stats-bar {
+            background: var(--glass);
             backdrop-filter: blur(10px);
-            border-top: 2px solid #6c5ce7;
-            padding: 3rem 2rem 1rem;
+            border: 1px solid var(--glass-border);
+            border-radius: 60px;
+            padding: 1rem 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-around;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-block {
+            text-align: center;
+            animation: statFade 1s;
+        }
+
+        .stat-block .number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-block .label {
+            color: var(--light);
+            opacity: 0.8;
+        }
+
+        /* لوحة التحكم المتطورة */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 1000;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+        }
+
+        .admin-header h2 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* تذييل متطور */
+        footer {
+            background: var(--darker);
+            border-top: 2px solid var(--primary);
+            padding: 4rem 2rem 2rem;
             margin-top: 4rem;
+            position: relative;
+            z-index: 2;
         }
 
         .footer-content {
@@ -948,98 +658,73 @@
             gap: 3rem;
         }
 
+        .footer-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .footer-section:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(108,92,231,0.2);
+        }
+
         .footer-section h4 {
             color: white;
             margin-bottom: 1.5rem;
-            font-size: 1.2rem;
-        }
-
-        .footer-section h4 i {
-            color: #6c5ce7;
-            margin-left: 0.5rem;
-        }
-
-        .footer-section p {
-            color: #a0a0a0;
-            line-height: 1.8;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.8rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .footer-section ul li i {
-            color: #6c5ce7;
-            width: 20px;
+        .footer-section h4 i {
+            color: var(--primary);
         }
 
-        .footer-section ul li a {
-            color: #a0a0a0;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .footer-section ul li a:hover {
-            color: #6c5ce7;
-            transform: translateX(-5px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            background: #6c5ce7;
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
+        .dimo-signature {
             text-align: center;
+            margin-top: 3rem;
             padding-top: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: #a0a0a0;
+            border-top: 1px solid var(--glass-border);
         }
 
-        .footer-bottom .dimo-signature {
-            color: #6c5ce7;
+        .dimo-signature .big-dimo {
+            font-size: 4rem;
             font-weight: 900;
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            animation: signatureGlow 3s infinite;
         }
 
-        /* Responsive */
+        .dimo-signature .phone {
+            font-size: 2rem;
+            color: var(--primary);
+            display: block;
+            margin: 1rem 0;
+        }
+
+        @keyframes signatureGlow {
+            0%, 100% { text-shadow: 0 0 30px rgba(108,92,231,0.3); }
+            50% { text-shadow: 0 0 60px rgba(108,92,231,0.6); }
+        }
+
+        /* تحسينات متجاوبة */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
             
-            .hero .phone-large {
-                font-size: 1.5rem;
+            .hero-phone {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 1rem;
             }
             
             .cart-sidebar {
@@ -1047,19 +732,61 @@
                 right: -100%;
             }
             
+            .whatsapp-btn {
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 1rem;
+                border-radius: 30px;
+            }
+            
             .footer-content {
                 grid-template-columns: 1fr;
             }
-            
-            .form-row {
-                grid-template-columns: 1fr;
+        }
+
+        /* تأثيرات التمرير */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform-origin: 0%;
+            z-index: 1000;
+        }
+
+        /* رسائل منبثقة متطورة */
+        .toast-message {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary);
+            border-radius: 60px;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
             }
-            
-            .whatsapp-btn {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
-                bottom: 1rem;
-                left: 1rem;
+            to {
+                transform: translateX(0);
+                opacity: 1;
             }
         }
     </style>
@@ -1067,49 +794,116 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- إضاءة ديناميكية -->
-    <div class="light-overlay" id="lightOverlay"></div>
+    <!-- خلفية dimo ثلاثية الأبعاد -->
+    <div class="dimo-background">
+        <div class="dimo-layer dimo-layer-1">dimo</div>
+        <div class="dimo-layer dimo-layer-2">dimo</div>
+        <div class="dimo-layer dimo-layer-3">dimo</div>
+    </div>
 
-    <!-- Navigation -->
+    <!-- إضاءة ديناميكية متطورة -->
+    <div class="dynamic-lighting" id="dynamicLighting"></div>
+
+    <!-- جسيمات متحركة -->
+    <div class="particles" id="particles"></div>
+
+    <!-- شريط تقدم التمرير -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- Navigation متطور -->
     <nav>
         <div class="nav-container">
-            <div class="logo">
-                dimo
-                <span>BOOKS</span>
+            <div class="logo-3d">
+                <div class="logo">
+                    <div class="logo-front">dimo</div>
+                    <div class="logo-back">dimo</div>
+                    <span>BOOKS</span>
+                </div>
             </div>
-            <div class="nav-links">
-                <a href="#" onclick="showSection('home')">الرئيسية</a>
-                <a href="#" onclick="showSection('books')">الكتب</a>
-                <a href="#" onclick="showSection('categories')">التصنيفات</a>
-                <a href="#" onclick="showSection('bestsellers')">الأكثر مبيعاً</a>
-                <a href="#" onclick="showSection('offers')">عروض</a>
-            </div>
-            <div style="display: flex; gap: 1.5rem; align-items: center;">
-                <!-- رقم الهاتف في الناف بار -->
+            
+            <div class="phone-3d" onclick="openWhatsApp()">
                 <div class="phone-number">
                     <i class="fas fa-phone-alt"></i>
-                    01060131138
+                    <span>01060131138</span>
+                    <i class="fas fa-whatsapp"></i>
                 </div>
+            </div>
+            
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
                 <button class="admin-btn" onclick="openAdminPanel()">
                     <i class="fas fa-cog"></i> لوحة التحكم
                 </button>
                 <div class="cart-icon" onclick="toggleCart()">
-                    <i class="fas fa-shopping-cart" style="color: white;"></i>
+                    <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Hero Section متطور -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <span class="dimo-text">dimo</span>
+            </h1>
+            <div class="hero-phone">
+                <i class="fas fa-phone-alt"></i>
+                <span>01060131138</span>
+                <i class="fas fa-whatsapp"></i>
+            </div>
+            <p style="font-size: 1.5rem; margin: 2rem 0;">أكبر مكتبة رقمية عربية - آلاف الكتب في انتظارك</p>
+            
+            <div class="stats-bar">
+                <div class="stat-block">
+                    <span class="number" id="totalBooksStat">0</span>
+                    <span class="label">كتاب</span>
+                </div>
+                <div class="stat-block">
+                    <span class="number" id="totalCategoriesStat">0</span>
+                    <span class="label">تصنيف</span>
+                </div>
+                <div class="stat-block">
+                    <span class="number" id="totalSalesStat">0</span>
+                    <span class="label">مبيع</span>
+                </div>
+                <div class="stat-block">
+                    <span class="number" id="happyCustomersStat">1500</span>
+                    <span class="label">عميل سعيد</span>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث عن كتاب، مؤلف، أو تصنيف...">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <div class="categories" id="categories">
+        <button class="category-btn active" onclick="filterBooks('all')">الكل</button>
+        <button class="category-btn" onclick="filterBooks('روايات')">روايات</button>
+        <button class="category-btn" onclick="filterBooks('تنمية بشرية')">تنمية بشرية</button>
+        <button class="category-btn" onclick="filterBooks('علوم')">علوم</button>
+        <button class="category-btn" onclick="filterBooks('تاريخ')">تاريخ</button>
+        <button class="category-btn" onclick="filterBooks('دينية')">دينية</button>
+        <button class="category-btn" onclick="filterBooks('أطفال')">أطفال</button>
+        <button class="category-btn" onclick="filterBooks('اقتصاد')">اقتصاد</button>
+    </div>
+
+    <!-- Books Grid -->
+    <div class="books-grid" id="booksGrid"></div>
+
     <!-- Admin Panel -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-container">
             <div class="admin-header">
-                <h2><i class="fas fa-cog"></i> dimo - لوحة التحكم</h2>
+                <h2><i class="fas fa-cog"></i> dimo - لوحة التحكم المتطورة</h2>
                 <span class="close-admin" onclick="closeAdminPanel()">×</span>
             </div>
 
-            <!-- الإحصائيات -->
+            <!-- إحصائيات متطورة -->
             <div class="admin-stats">
                 <div class="stat-card">
                     <i class="fas fa-book"></i>
@@ -1127,19 +921,19 @@
                     <span class="stat-number" id="totalSales">0</span>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-boxes"></i>
-                    <h3>الكتب المتوفرة</h3>
-                    <span class="stat-number" id="totalStock">0</span>
+                    <i class="fas fa-users"></i>
+                    <h3>العملاء</h3>
+                    <span class="stat-number" id="totalCustomers">1500</span>
                 </div>
             </div>
 
-            <!-- إضافة كتاب جديد -->
+            <!-- إضافة كتاب -->
             <div class="add-book-form">
                 <h3><i class="fas fa-plus-circle"></i> إضافة كتاب جديد - dimo</h3>
                 <div class="form-row">
                     <div class="form-group">
                         <label>عنوان الكتاب</label>
-                        <input type="text" id="bookTitle" placeholder="مثال: الأب الغني والأب الفقير">
+                        <input type="text" id="bookTitle" placeholder="عنوان الكتاب">
                     </div>
                     <div class="form-group">
                         <label>المؤلف</label>
@@ -1148,12 +942,12 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>السعر (ج.م)</label>
-                        <input type="number" id="bookPrice" placeholder="مثال: 120">
+                        <label>السعر</label>
+                        <input type="number" id="bookPrice" placeholder="السعر">
                     </div>
                     <div class="form-group">
-                        <label>الكمية المتوفرة</label>
-                        <input type="number" id="bookStock" placeholder="مثال: 50">
+                        <label>الكمية</label>
+                        <input type="number" id="bookStock" placeholder="الكمية">
                     </div>
                     <div class="form-group">
                         <label>التصنيف</label>
@@ -1165,37 +959,13 @@
                             <option value="دينية">دينية</option>
                             <option value="أطفال">أطفال</option>
                             <option value="اقتصاد">اقتصاد</option>
-                            <option value="فلسفة">فلسفة</option>
-                            <option value="طب">طب</option>
-                            <option value="هندسة">هندسة</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>وصف الكتاب</label>
-                        <textarea id="bookDescription" placeholder="وصف مختصر للكتاب..."></textarea>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>رابط صورة الغلاف (اختياري)</label>
-                        <input type="url" id="bookImage" placeholder="https://example.com/image.jpg">
-                    </div>
-                    <div class="form-group">
-                        <label>اختر أيقونة</label>
-                        <select id="bookIcon">
-                            <option value="fa-book">كتاب</option>
-                            <option value="fa-graduation-cap">تعليم</option>
-                            <option value="fa-flask">علوم</option>
-                            <option value="fa-heart">حب</option>
-                            <option value="fa-brain">عقل</option>
-                            <option value="fa-chart-line">اقتصاد</option>
-                            <option value="fa-history">تاريخ</option>
-                            <option value="fa-child">أطفال</option>
-                            <option value="fa-mosque">ديني</option>
-                            <option value="fa-robot">تكنولوجيا</option>
-                        </select>
+                        <label>الوصف</label>
+                        <textarea id="bookDescription" placeholder="وصف الكتاب"></textarea>
                     </div>
                 </div>
                 <button class="submit-btn" onclick="addBook()">
@@ -1205,15 +975,12 @@
 
             <!-- جدول الكتب -->
             <div class="books-table-container">
-                <h3 style="color: white; margin-bottom: 1.5rem;">
-                    <i class="fas fa-list"></i> قائمة الكتب - dimo
-                </h3>
-                <table class="books-table" id="booksTable">
+                <h3><i class="fas fa-list"></i> قائمة الكتب - dimo</h3>
+                <table class="books-table">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>الغلاف</th>
-                            <th>عنوان الكتاب</th>
+                            <th>الكتاب</th>
                             <th>المؤلف</th>
                             <th>السعر</th>
                             <th>الكمية</th>
@@ -1222,9 +989,7 @@
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="booksTableBody">
-                        <!-- سيتم إضافة الكتب هنا ديناميكياً -->
-                    </tbody>
+                    <tbody id="booksTableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -1236,9 +1001,7 @@
             <h3><i class="fas fa-shopping-cart"></i> سلة dimo</h3>
             <span class="close-cart" onclick="toggleCart()">×</span>
         </div>
-        <div class="cart-items" id="cartItems">
-            <!-- Cart items will be added here dynamically -->
-        </div>
+        <div class="cart-items" id="cartItems"></div>
         <div class="cart-total">
             <div>
                 <span>المجموع:</span>
@@ -1251,50 +1014,20 @@
     </div>
 
     <!-- WhatsApp Button -->
-    <button class="whatsapp-btn" onclick="openWhatsApp()">
-        <i class="fab fa-whatsapp"></i>
-        <span>01060131138</span>
-    </button>
-
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <!-- Hero Section -->
-        <section class="hero">
-            <h1>مرحباً بك في dimo</h1>
-            <div class="phone-large">
-                <i class="fas fa-phone-alt"></i>
-                <span>01060131138</span>
-                <i class="fas fa-book-open"></i>
-            </div>
-            <p>أكبر مكتبة رقمية عربية - آلاف الكتب في انتظارك</p>
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="ابحث عن كتاب، مؤلف، أو تصنيف...">
-                <i class="fas fa-search"></i>
-            </div>
-        </section>
-
-        <!-- Categories -->
-        <div class="categories" id="categories">
-            <button class="category-btn active" onclick="filterBooks('all')">الكل</button>
-            <button class="category-btn" onclick="filterBooks('روايات')">روايات</button>
-            <button class="category-btn" onclick="filterBooks('تنمية بشرية')">تنمية بشرية</button>
-            <button class="category-btn" onclick="filterBooks('علوم')">علوم</button>
-            <button class="category-btn" onclick="filterBooks('تاريخ')">تاريخ</button>
-            <button class="category-btn" onclick="filterBooks('دينية')">دينية</button>
-            <button class="category-btn" onclick="filterBooks('أطفال')">أطفال</button>
-            <button class="category-btn" onclick="filterBooks('اقتصاد')">اقتصاد</button>
-        </div>
-
-        <!-- Books Grid -->
-        <div class="books-grid" id="booksGrid"></div>
+    <div class="whatsapp-advanced">
+        <button class="whatsapp-btn" onclick="openWhatsApp()">
+            <i class="fab fa-whatsapp"></i>
+            <span>01060131138</span>
+            <i class="fas fa-phone-alt"></i>
+        </button>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer متطور -->
     <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <h4><i class="fas fa-book"></i> عن dimo</h4>
-                <p>أكبر مكتبة رقمية عربية، نوفر آلاف الكتب في مختلف المجالات بأسعار مميزة وتوصيل سريع.</p>
+                <p>أكبر مكتبة رقمية عربية متطورة، نوفر آلاف الكتب في مختلف المجالات بأسعار مميزة وتوصيل سريع.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -1306,16 +1039,16 @@
             <div class="footer-section">
                 <h4><i class="fas fa-link"></i> روابط سريعة</h4>
                 <ul>
-                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('home')">الرئيسية</a></li>
-                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('about')">عن المكتبة</a></li>
-                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('books')">الكتب</a></li>
-                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('categories')">التصنيفات</a></li>
-                    <li><i class="fas fa-chevron-left"></i> <a href="#" onclick="showSection('bestsellers')">الأكثر مبيعاً</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#">الرئيسية</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#">عن المكتبة</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#">الكتب</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#">التصنيفات</a></li>
+                    <li><i class="fas fa-chevron-left"></i> <a href="#">الأكثر مبيعاً</a></li>
                 </ul>
             </div>
             
             <div class="footer-section">
-                <h4><i class="fas fa-headset"></i> خدمات العملاء</h4>
+                <h4><i class="fas fa-headset"></i> تواصل معنا</h4>
                 <ul>
                     <li><i class="fas fa-phone"></i> 01060131138</li>
                     <li><i class="fas fa-envelope"></i> info@dimo.com</li>
@@ -1323,121 +1056,127 @@
                     <li><i class="fab fa-whatsapp"></i> 01060131138</li>
                 </ul>
             </div>
-            
-            <div class="footer-section">
-                <h4><i class="fas fa-clock"></i> ساعات العمل</h4>
-                <ul>
-                    <li><i class="fas fa-calendar"></i> السبت - الخميس</li>
-                    <li><i class="fas fa-clock"></i> 9:00 ص - 10:00 م</li>
-                    <li><i class="fas fa-phone"></i> اتصل بنا الآن</li>
-                </ul>
-            </div>
         </div>
         
-        <div class="footer-bottom">
-            <p>© 2024 dimo - جميع الحقوق محفوظة</p>
-            <p class="dimo-signature">dimo ✦ 01060131138</p>
+        <div class="dimo-signature">
+            <span class="big-dimo">dimo</span>
+            <span class="phone">01060131138</span>
+            <p>© 2024 جميع الحقوق محفوظة لمكتبة dimo</p>
         </div>
     </footer>
 
     <script>
-        // ==================== إضاءة ديناميكية ====================
-        const overlay = document.getElementById('lightOverlay');
+        // إضاءة ديناميكية متطورة
+        const lighting = document.getElementById('dynamicLighting');
         
         document.addEventListener('mousemove', (e) => {
             const x = (e.clientX / window.innerWidth) * 100;
             const y = (e.clientY / window.innerHeight) * 100;
-            overlay.style.setProperty('--mouse-x', x + '%');
-            overlay.style.setProperty('--mouse-y', y + '%');
+            lighting.style.setProperty('--x', x + '%');
+            lighting.style.setProperty('--y', y + '%');
         });
 
-        // ==================== فتح واتساب ====================
+        // جسيمات متحركة
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = 10 + Math.random() * 10 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // شريط تقدم التمرير
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.transform = `scaleX(${scrolled / 100})`;
+        });
+
+        // رسالة منبثقة
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}" 
+                   style="color: ${type === 'success' ? 'var(--accent)' : 'var(--danger)'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // بيانات الكتب
+        let books = JSON.parse(localStorage.getItem('dimoBooks')) || [];
+        let cart = JSON.parse(localStorage.getItem('dimoCart')) || [];
+
+        // دالة فتح الواتساب
         function openWhatsApp() {
             const phone = '01060131138';
             const message = 'مرحباً dimo، أريد الاستفسار عن الكتب';
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // ==================== تخزين الكتب ====================
-        let books = JSON.parse(localStorage.getItem('dimoBooks')) || [];
+        // تحديث الإحصائيات
+        function updateStats() {
+            document.getElementById('totalBooks').textContent = books.length;
+            document.getElementById('totalBooksStat').textContent = books.length;
+            
+            const categories = [...new Set(books.map(b => b.category))];
+            document.getElementById('totalCategories').textContent = categories.length;
+            document.getElementById('totalCategoriesStat').textContent = categories.length;
+            
+            const totalSales = books.reduce((sum, b) => sum + (b.sales || 0), 0);
+            document.getElementById('totalSales').textContent = totalSales;
+            document.getElementById('totalSalesStat').textContent = totalSales;
+        }
 
-        // ==================== سلة المشتريات ====================
-        let cart = JSON.parse(localStorage.getItem('dimoCart')) || [];
-
-        // ==================== عرض الكتب ====================
+        // عرض الكتب
         function displayBooks(filterCategory = 'all', searchTerm = '') {
             const grid = document.getElementById('booksGrid');
             
             let filteredBooks = books;
             
-            // تصفية حسب التصنيف
             if (filterCategory !== 'all') {
                 filteredBooks = filteredBooks.filter(book => book.category === filterCategory);
             }
             
-            // تصفية حسب البحث
             if (searchTerm) {
                 filteredBooks = filteredBooks.filter(book => 
                     book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    book.category.toLowerCase().includes(searchTerm.toLowerCase())
+                    book.author.toLowerCase().includes(searchTerm.toLowerCase())
                 );
-            }
-            
-            if (filteredBooks.length === 0) {
-                grid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #a0a0a0;">
-                        <i class="fas fa-book-open" style="font-size: 5rem; margin-bottom: 1rem;"></i>
-                        <h3>لا توجد كتب متاحة</h3>
-                        <p>استخدم لوحة التحكم لإضافة كتب جديدة - dimo</p>
-                    </div>
-                `;
-                return;
             }
             
             grid.innerHTML = filteredBooks.map(book => `
                 <div class="book-card">
                     <div class="book-cover">
-                        ${book.image ? 
-                            `<img src="${book.image}" style="width:100%;height:100%;object-fit:cover;">` : 
-                            `<i class="fas ${book.icon || 'fa-book'}"></i>`
-                        }
+                        <i class="fas ${book.icon || 'fa-book'}"></i>
                     </div>
                     <div class="book-info">
                         <h3 class="book-title">${book.title}</h3>
                         <p class="book-author">${book.author}</p>
-                        <div class="book-rating">
-                            ${generateStars(book.rating || 4.5)}
-                        </div>
                         <div class="book-price">${book.price} ج.م</div>
                         <div class="book-stock ${book.stock < 10 ? 'low' : ''}">
                             <i class="fas fa-box"></i> ${book.stock} نسخة متوفرة
                         </div>
                         <button class="add-to-cart" onclick="addToCart(${book.id})" ${book.stock === 0 ? 'disabled' : ''}>
-                            <i class="fas fa-cart-plus"></i> 
-                            ${book.stock === 0 ? 'نفذت الكمية' : 'أضف إلى السلة - dimo'}
+                            <i class="fas fa-cart-plus"></i> أضف إلى السلة - dimo
                         </button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // ==================== توليد النجوم ====================
-        function generateStars(rating) {
-            let stars = '';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= Math.floor(rating)) {
-                    stars += '<i class="fas fa-star"></i>';
-                } else if (i - rating < 1 && i - rating > 0) {
-                    stars += '<i class="fas fa-star-half-alt"></i>';
-                } else {
-                    stars += '<i class="far fa-star"></i>';
-                }
-            }
-            return stars;
-        }
-
-        // ==================== إضافة كتاب ====================
+        // إضافة كتاب
         function addBook() {
             const title = document.getElementById('bookTitle').value;
             const author = document.getElementById('bookAuthor').value;
@@ -1445,11 +1184,9 @@
             const stock = parseInt(document.getElementById('bookStock').value);
             const category = document.getElementById('bookCategory').value;
             const description = document.getElementById('bookDescription').value;
-            const image = document.getElementById('bookImage').value;
-            const icon = document.getElementById('bookIcon').value;
             
             if (!title || !author || !price || !stock) {
-                alert('❌ الرجاء ملء جميع الحقول المطلوبة - dimo');
+                showToast('الرجاء ملء جميع الحقول المطلوبة', 'error');
                 return;
             }
             
@@ -1461,15 +1198,13 @@
                 stock,
                 category,
                 description,
-                image,
-                icon,
-                rating: 4.5,
-                sales: 0,
-                dateAdded: new Date().toISOString()
+                icon: 'fa-book',
+                sales: 0
             };
             
             books.push(newBook);
-            saveBooks();
+            localStorage.setItem('dimoBooks', JSON.stringify(books));
+            
             updateBooksTable();
             updateStats();
             displayBooks();
@@ -1480,63 +1215,16 @@
             document.getElementById('bookPrice').value = '';
             document.getElementById('bookStock').value = '';
             document.getElementById('bookDescription').value = '';
-            document.getElementById('bookImage').value = '';
             
-            alert('✅ تم إضافة الكتاب بنجاح - dimo');
+            showToast('تم إضافة الكتاب بنجاح - dimo');
         }
 
-        // ==================== حذف كتاب ====================
-        function deleteBook(bookId) {
-            if (confirm('هل أنت متأكد من حذف هذا الكتاب؟ - dimo')) {
-                books = books.filter(book => book.id !== bookId);
-                saveBooks();
-                updateBooksTable();
-                updateStats();
-                displayBooks();
-            }
-        }
-
-        // ==================== تعديل كتاب ====================
-        function editBook(bookId) {
-            const book = books.find(b => b.id === bookId);
-            if (!book) return;
-            
-            const newTitle = prompt('تعديل العنوان - dimo:', book.title);
-            if (newTitle) book.title = newTitle;
-            
-            const newAuthor = prompt('تعديل المؤلف - dimo:', book.author);
-            if (newAuthor) book.author = newAuthor;
-            
-            const newPrice = prompt('تعديل السعر - dimo:', book.price);
-            if (newPrice) book.price = parseFloat(newPrice);
-            
-            const newStock = prompt('تعديل الكمية - dimo:', book.stock);
-            if (newStock) book.stock = parseInt(newStock);
-            
-            saveBooks();
-            updateBooksTable();
-            displayBooks();
-        }
-
-        // ==================== حفظ الكتب في localStorage ====================
-        function saveBooks() {
-            localStorage.setItem('dimoBooks', JSON.stringify(books));
-            updateStats();
-        }
-
-        // ==================== تحديث جدول الكتب ====================
+        // تحديث جدول الكتب
         function updateBooksTable() {
             const tbody = document.getElementById('booksTableBody');
-            if (!tbody) return;
-            
             tbody.innerHTML = books.map((book, index) => `
                 <tr>
                     <td>${index + 1}</td>
-                    <td>
-                        <div class="book-image">
-                            <i class="fas ${book.icon || 'fa-book'}"></i>
-                        </div>
-                    </td>
                     <td>${book.title}</td>
                     <td>${book.author}</td>
                     <td>${book.price} ج.م</td>
@@ -1555,21 +1243,36 @@
             `).join('');
         }
 
-        // ==================== تحديث الإحصائيات ====================
-        function updateStats() {
-            document.getElementById('totalBooks').textContent = books.length;
-            
-            const categories = [...new Set(books.map(b => b.category))];
-            document.getElementById('totalCategories').textContent = categories.length;
-            
-            const totalSales = books.reduce((sum, b) => sum + (b.sales || 0), 0);
-            document.getElementById('totalSales').textContent = totalSales;
-            
-            const totalStock = books.reduce((sum, b) => sum + b.stock, 0);
-            document.getElementById('totalStock').textContent = totalStock;
+        // حذف كتاب
+        function deleteBook(bookId) {
+            if (confirm('هل أنت متأكد من حذف هذا الكتاب؟ - dimo')) {
+                books = books.filter(book => book.id !== bookId);
+                localStorage.setItem('dimoBooks', JSON.stringify(books));
+                updateBooksTable();
+                updateStats();
+                displayBooks();
+                showToast('تم حذف الكتاب بنجاح - dimo');
+            }
         }
 
-        // ==================== إضافة إلى السلة ====================
+        // تعديل كتاب
+        function editBook(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            
+            const newTitle = prompt('تعديل العنوان:', book.title);
+            if (newTitle) book.title = newTitle;
+            
+            const newPrice = prompt('تعديل السعر:', book.price);
+            if (newPrice) book.price = parseFloat(newPrice);
+            
+            localStorage.setItem('dimoBooks', JSON.stringify(books));
+            updateBooksTable();
+            displayBooks();
+            showToast('تم تعديل الكتاب بنجاح - dimo');
+        }
+
+        // إضافة إلى السلة
         function addToCart(bookId) {
             const book = books.find(b => b.id === bookId);
             if (!book || book.stock === 0) return;
@@ -1580,7 +1283,7 @@
                 if (existingItem.quantity < book.stock) {
                     existingItem.quantity++;
                 } else {
-                    alert('❌ الكمية المطلوبة غير متوفرة - dimo');
+                    showToast('الكمية المطلوبة غير متوفرة', 'error');
                     return;
                 }
             } else {
@@ -1590,11 +1293,12 @@
                 });
             }
             
-            saveCart();
+            localStorage.setItem('dimoCart', JSON.stringify(cart));
             updateCart();
+            showToast('تمت إضافة الكتاب إلى السلة - dimo');
         }
 
-        // ==================== تحديث السلة ====================
+        // تحديث السلة
         function updateCart() {
             const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -1625,7 +1329,7 @@
             document.getElementById('cartTotal').textContent = cartTotal + ' ج.م';
         }
 
-        // ==================== تحديث الكمية ====================
+        // تحديث الكمية في السلة
         function updateQuantity(bookId, change) {
             const item = cart.find(i => i.id === bookId);
             const book = books.find(b => b.id === bookId);
@@ -1638,29 +1342,23 @@
                 removeFromCart(bookId);
             } else if (newQuantity <= book.stock) {
                 item.quantity = newQuantity;
-                saveCart();
+                localStorage.setItem('dimoCart', JSON.stringify(cart));
                 updateCart();
-            } else {
-                alert('❌ الكمية المطلوبة غير متوفرة - dimo');
             }
         }
 
-        // ==================== إزالة من السلة ====================
+        // إزالة من السلة
         function removeFromCart(bookId) {
             cart = cart.filter(item => item.id !== bookId);
-            saveCart();
-            updateCart();
-        }
-
-        // ==================== حفظ السلة ====================
-        function saveCart() {
             localStorage.setItem('dimoCart', JSON.stringify(cart));
+            updateCart();
+            showToast('تمت إزالة الكتاب من السلة - dimo');
         }
 
-        // ==================== إتمام الشراء ====================
+        // إتمام الشراء
         function checkout() {
             if (cart.length === 0) {
-                alert('السلة فارغة! - dimo');
+                showToast('السلة فارغة!', 'error');
                 return;
             }
             
@@ -1673,19 +1371,36 @@
                 }
             });
             
-            saveBooks();
+            localStorage.setItem('dimoBooks', JSON.stringify(books));
             
-            alert(`✅ تم إتمام الشراء بنجاح - dimo!\nالمجموع: ${cart.reduce((sum, i) => sum + (i.price * i.quantity), 0)} ج.م\nللتواصل: 01060131138`);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            showToast(`تم إتمام الشراء بنجاح! المجموع: ${total} ج.م - dimo`);
             
             cart = [];
-            saveCart();
+            localStorage.setItem('dimoCart', JSON.stringify(cart));
             updateCart();
             displayBooks();
             updateBooksTable();
             toggleCart();
         }
 
-        // ==================== تصفية الكتب ====================
+        // فتح/إغلاق السلة
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+        }
+
+        // فتح/إغلاق لوحة التحكم
+        function openAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'block';
+            updateBooksTable();
+            updateStats();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        // تصفية الكتب
         function filterBooks(category) {
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -1698,37 +1413,17 @@
             displayBooks(category, searchTerm);
         }
 
-        // ==================== بحث ====================
-        document.getElementById('searchInput')?.addEventListener('input', (e) => {
+        // بحث
+        document.getElementById('searchInput').addEventListener('input', (e) => {
             const activeCategory = document.querySelector('.category-btn.active')?.textContent || 'الكل';
             const category = activeCategory === 'الكل' ? 'all' : activeCategory;
             displayBooks(category, e.target.value);
         });
 
-        // ==================== لوحة التحكم ====================
-        function openAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'block';
-            updateBooksTable();
-            updateStats();
-        }
-
-        function closeAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'none';
-        }
-
-        // ==================== تبديل السلة ====================
-        function toggleCart() {
-            document.getElementById('cartSidebar').classList.toggle('open');
-        }
-
-        // ==================== إظهار الأقسام ====================
-        function showSection(section) {
-            console.log('Showing section:', section);
-        }
-
-        // ==================== تهيئة الموقع ====================
+        // تهيئة الموقع
         function init() {
-            // إضافة بعض الكتب الافتراضية إذا كانت القائمة فارغة
+            createParticles();
+            
             if (books.length === 0) {
                 books = [
                     {
@@ -1740,7 +1435,6 @@
                         category: "اقتصاد",
                         description: "كتاب في التنمية المالية",
                         icon: "fa-chart-line",
-                        rating: 4.8,
                         sales: 150
                     },
                     {
@@ -1752,11 +1446,10 @@
                         category: "تنمية بشرية",
                         description: "كتاب في تطوير الذات",
                         icon: "fa-clock",
-                        rating: 4.9,
                         sales: 200
                     }
                 ];
-                saveBooks();
+                localStorage.setItem('dimoBooks', JSON.stringify(books));
             }
             
             displayBooks();
@@ -1766,6 +1459,7 @@
         }
 
         // جعل الدوال معرفة عالمياً
+        window.openWhatsApp = openWhatsApp;
         window.openAdminPanel = openAdminPanel;
         window.closeAdminPanel = closeAdminPanel;
         window.addBook = addBook;
@@ -1777,8 +1471,6 @@
         window.toggleCart = toggleCart;
         window.checkout = checkout;
         window.filterBooks = filterBooks;
-        window.showSection = showSection;
-        window.openWhatsApp = openWhatsApp;
 
         // بدء التطبيق
         init();
